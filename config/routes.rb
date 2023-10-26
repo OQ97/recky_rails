@@ -1,6 +1,15 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  #General directories 
+  get("/", controller:"general", action: "homepage")
+  get("/notfound", controller:"general", action: "notfound")
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+
+
+  #Catno
+  get("/search/catno", controller: "catno", action: "search")
+  get("search/catno/multreleases/:catno", controller: "catno", action: "multreleases")
+  get("search/catno/findpressing/:masterid/:catno", controller: "catno", action: "findpressing")
+  get("search/catno/pressing/:recordid", controller: "catno", action: "pressing")
+
+
 end
