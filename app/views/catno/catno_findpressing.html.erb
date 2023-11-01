@@ -1,4 +1,38 @@
-<h1>Find pressing </h1>
+<Title>Recky | Find pressing</Title>
 
-<%= @master_id %>
-<%= @catno %>
+<h1>Find pressing </h1>
+<img src="<%= @cover_url%>" alt="Album cover for <%= @record %> by <%= @arist %>" height=300>
+<p><%= @artist %></p>
+<p><%= @record %></p>
+<p><%= @catno %></p>
+<p><%= @drop_years %></p>
+
+<script>
+var mealsByCategory = {
+    <% @drop_years.sort.uniq.each do |a_year| %>
+    <% drop_countries = @drop_hash.select { |hash| hash["year"] == a_year }.map { |hash| hash["country"] } %>
+    <%= a_year %>: ["<%= drop_countries.join(', ') %>"],
+    <% end %>
+}
+
+    function changecat(value) {
+        if (value.length == 0) document.getElementById("category").innerHTML = "<option></option>";
+        else {
+            var catOptions = "";
+            for (categoryId in mealsByCategory[value]) {
+                catOptions += "<option>" + mealsByCategory[value][categoryId] + "</option>";
+            }
+            document.getElementById("category").innerHTML = catOptions;
+        }
+    }
+</script>
+
+<select name="meal" id="meal" onChange="changecat(this.value);">
+    <option value="" disabled selected>Select</option>
+    <% @drop_years.sort.uniq.each do |a_year|%>
+    <option value="<%= a_year %>"><%= a_year %></option>
+    <% end %>
+</select>
+<select name="category" id="category">
+    <option value="" disabled selected>Select</option>
+</select>

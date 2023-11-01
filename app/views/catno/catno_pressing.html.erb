@@ -1,2 +1,19 @@
+<Title>Recky | <%= @record %></Title>
+
 <h1>Pressing</h1>
-<%= @record_id %>
+<p><img src="<%= @cover_url%>" alt="Album cover for <%= @record %> by <%= @arist %>" height=300>
+<Button>Explore all pressings</Button>
+<p>Artist: <%= @artist %></p>
+<p>Record: <%= @record %></p>
+<p>New / Like new: $<%= sprintf("%.2f", @new).to_f %></p>
+<p>Good / Excellent condition: $<%= sprintf("%.2f", @used_excellent).to_f %></p>
+<p>Poor working condition: $<%= sprintf("%.2f", @used_working).to_f %></p>
+<p>Catalogue number: <%= @catno %></p>
+<p>Record label: <%= @label %></p>
+<p>Pressing release year: <%= @press_year %></p>
+<p>Pressing country: <%= @press_country %></p>
+<p>Version: <%= @text %></p>
+<p>Genre: <%= @genre %></p>
+<p>Buy on Discogs: <a href="<%= @discogs_buy_link %>" target="_blank">Go to Discogs</a></p>
+<p>Buy on eBay: <a href="<%= @ebay_search_link %>" target="_blank">Go to eBay</a></p>
+<%= @html_table.html_safe %>
