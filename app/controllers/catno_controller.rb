@@ -71,7 +71,7 @@ def findpressing
 
   #Finding first record that matches master and catno for basic album info
   @matching_hashes = $results_array.select do |hash|
-    hash["catno"] == @catno && hash["master_id"] == @master_id.to_i
+   hash["catno"] == @catno && hash["master_id"] == @master_id.to_i
   end 
 
   @drop_hash = @matching_hashes.map do |hash|
@@ -90,6 +90,12 @@ def findpressing
       "record_id" => id
     }
   end
+
+  @drop_array = @drop_hash.map do |hash|
+    "#{hash["year"]} | #{hash["country"]} | #{hash["text"]} | #{hash["record_id"]}"
+  end
+
+  @drop_array = @drop_array.map { |str| str.gsub('&', ' + ') }
 
   @drop_years = @drop_hash.map { |hash| hash["year"] }
 

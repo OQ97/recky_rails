@@ -5,34 +5,109 @@
 <p><%= @artist %></p>
 <p><%= @record %></p>
 <p><%= @catno %></p>
-<p><%= @drop_years %></p>
+
+<select name="year" id="year" onChange="changecont(this.value);">
+    <option value="" disabled selected>Select a year</option>
+    <% unique_years = [] %>
+    <% @drop_array.each do |a_year|%>
+    <% drop_year = a_year.split(" | ").first%>
+    <% unique_years << drop_year %>
+    <% end %>
+    <% unique_years.sort.uniq.each do |unique_year|%>
+    <option value="<%= unique_year %>"><%= unique_year %></option>
+    <% end %>
+</select>
+<select name="country" id="country" onChange="changetext(this.value);">
+    <option value="" disabled selected>Select a country</option>
+</select>
+<select name="text" id="text" onChange="checkSelection();">
+    <option value="" disabled selected>Select a version</option>
+    <!-- Add more options here -->
+</select>
+<button id="goButton" disabled>Go</button>
 
 <script>
-var mealsByCategory = {
-    <% @drop_years.sort.uniq.each do |a_year| %>
-    <% drop_countries = @drop_hash.select { |hash| hash["year"] == a_year }.map { |hash| hash["country"] } %>
-    <%= a_year %>: ["<%= drop_countries.join(', ') %>"],
+var yearsByCountry = {
+    <% unique_years.sort.uniq.each do |unique_year| %>
+    '<%= unique_year %>': [
+        'Select a country',
+        <% unique_year_countries = [] %>
+        <% @drop_array.each do |string| %>
+            <% year, country, _text, _record_id = string.split(" | ") %>
+
+            <% if year == unique_year %>
+            <% unique_year_countries << country  %>
+            <% end %>
+            <% end %>
+        <% unique_year_countries.sort.uniq.each do |a_country|%>
+        '<%= a_country%>',
+        <% end %>
+        ],
+    <% end%>
+};
+
+var textsByCountry = {
+  <% year_country_combs = [] %>
+  <% @drop_array.each do |comb| %>
+    <% year, country, _text, _record_id = comb.split(" | ") %>
+    <% year_country_combs << "#{year} | #{escape_javascript(country)}" %>
+  <% end %>
+
+  <% year_country_combs.sort.uniq.each do |year_country| %>
+    '<%= year_country %>': [ 
+    <% matching_version = []%>
+    <% year_country_split = year_country.split(" | ")%>
+    <% match_year = year_country_split[0] %>
+    <% match_country = year_country_split[1] %>
+    <% @drop_array.each do |string|%>
+    <% parts = string.split(" | ")%>
+    <% if parts[0] == match_year && parts[1] == match_country%>
+        <% matching_version << parts[2]%>
     <% end %>
+    <% end %>
+    <% matching_version.sort.each do |a_version|%>
+    '<%= a_version%>',
+    <% end %>
+    ],
+  <% end %>
+};
+
+function changecont(value) {
+    if (value.length == 0) {
+        document.getElementById("country").innerHTML = "<option></option>";
+    } else {
+        var countryOptions = "";
+        for (var i = 0; i < yearsByCountry[value].length; i++) {
+            var countryName = yearsByCountry[value][i];
+            countryOptions += `<option value="${value} | ${countryName}">${countryName}</option>`;
+        }
+        document.getElementById("country").innerHTML = countryOptions;
+    }
+    document.getElementById("text").innerHTML = "<option value='' disabled selected>Select a version</option>";
 }
 
-    function changecat(value) {
-        if (value.length == 0) document.getElementById("category").innerHTML = "<option></option>";
-        else {
-            var catOptions = "";
-            for (categoryId in mealsByCategory[value]) {
-                catOptions += "<option>" + mealsByCategory[value][categoryId] + "</option>";
-            }
-            document.getElementById("category").innerHTML = catOptions;
+function changetext(value) {
+    if (value.length == 0) {
+        document.getElementById("text").innerHTML = "<option value='' disabled selected>Select a version</option>";
+    } else {
+        var textOptions = "";
+        for (textId in textsByCountry[value]) {
+            textOptions += "<option>" + textsByCountry[value][textId] + "</option>";
         }
+        document.getElementById("text").innerHTML = textOptions;
+        checkSelection(); // Call the function here when the dropdown changes
     }
-</script>
+}
 
-<select name="meal" id="meal" onChange="changecat(this.value);">
-    <option value="" disabled selected>Select</option>
-    <% @drop_years.sort.uniq.each do |a_year|%>
-    <option value="<%= a_year %>"><%= a_year %></option>
-    <% end %>
-</select>
-<select name="category" id="category">
-    <option value="" disabled selected>Select</option>
-</select>
+function checkSelection() {
+    var textSelect = document.getElementById("text");
+    var goButton = document.getElementById("goButton");
+    
+    if (textSelect.value) {
+        goButton.removeAttribute("disabled");
+    } else {
+        goButton.setAttribute("disabled", "disabled");
+    }
+}
+
+</script>
