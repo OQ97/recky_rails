@@ -1,0 +1,63 @@
+<Title>Recky | <%= @record %></Title>
+<h1>Pressing</h1>
+<h1><%= @recordid %></h1>
+<div id="carousel-container" style="width: 300px; margin: 0; overflow: hidden; position: relative; left: 0;">
+  <button id="prevBtn" style="cursor: pointer; display: block; position: absolute; top: 50%; transform: translateY(-50%); padding: 10px; background-color: #007BFF; color: #fff; font-size: 16px; border: none; border-radius: 5px; left: 10px; z-index: 1;" onclick="prevSlide()"><</button>
+  <div class="carousel" style="display: flex;">
+    <% @image_link_array.each do |an_image|%>
+    <img class="carousel-image" src="<%= an_image %>" alt="Album image" style="height: 300px; width: 100%; object-fit: cover;">
+    <% end %>
+   </div>
+   <div id="counter" style="position: absolute; top: 10px; right: 10px; color: #fff; font-size: 16px;"></div>
+  <button id="nextBtn" style="cursor: pointer; display: block; position: absolute; top: 50%; transform: translateY(-50%); padding: 10px; background-color: #007BFF; color: #fff; font-size: 16px; border: none; border-radius: 5px; right: 10px;" onclick="nextSlide()">></button>
+</div>
+<p>
+<a href="/search/catno/explore/<%= @master_id %>/<%= @catno %>">
+<Button>Explore all pressings</Button>
+</a>
+</p>
+<p>
+<a href="/search/catno/findpressing/<%= @master_id %>/<%= @catno %>">
+<Button>Find a pressing</Button>
+</a>
+</p>
+<p>Artist: <%= @artist %></p>
+<p>Record: <%= @record %></p>
+<p>New / Like new: $<%= sprintf("%.2f", @new).to_f %></p>
+<p>Good / Excellent condition: $<%= sprintf("%.2f", @used_excellent).to_f %></p>
+<p>Poor working condition: $<%= sprintf("%.2f", @used_working).to_f %></p>
+<p>Catalogue number: <%= @catno %></p>
+<p>Record label: <%= @label %></p>
+<p>Pressing release year: <%= @press_year %></p>
+<p>Pressing country: <%= @press_country %></p>
+<p>Version: <%= @text %></p>
+<p>Release type: <%= @release_type %></p>
+<p>Genre: <%= @genre %></p>
+<p>Buy on Discogs: <a href="<%= @discogs_buy_link %>" target="_blank">Go to Discogs</a></p>
+<p>Buy on eBay: <a href="<%= @ebay_search_link %>" target="_blank">Go to eBay</a></p>
+<%= @html_table.html_safe %>
+
+
+
+<script>
+   let currentIndex = 0;
+  const totalImages = document.querySelectorAll('.carousel-image').length;
+
+  function showSlide() {
+    const newTransformValue = -currentIndex * 100 + '%';
+    document.querySelector('.carousel').style.transform = 'translateX(' + newTransformValue + ')';
+    document.getElementById('counter').innerText = (currentIndex + 1) + ' / ' + totalImages;
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % totalImages;
+    showSlide();
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+    showSlide();
+  }
+
+  document.addEventListener('DOMContentLoaded', showSlide);
+</script>

@@ -1,0 +1,102 @@
+<Title>Recky | Explore pressings</Title>
+
+<h1>Explore all pressings</h1>
+<img src="<%= @cover_url %>" alt="Album cover for <%= @record %> by <%= @arist %>" height=300>
+<p>
+<a href="/search/catno/findpressing/<%= @master_id %>/<%= @catno %>">
+<Button>Find a pressing</Button>
+</a>
+</p>
+<p><%= @artist %></p>
+<p><%= @record %></p>
+<p><%= @catno %></p>
+
+<table id="Results">
+
+<tr>
+  <th>Year</th>
+  <th>Country</th>
+  <th>Catno</th>
+  <th>Masterid</th>
+  <th>Record id</th>
+  <th>Version</th>
+  <th>Release type</th>
+  <th>Link</th>
+</tr>
+<% @filtered_results.each do |a_result|%>
+<tr>
+    <% if a_result.key?("year")%>
+    <td><%= a_result.fetch("year").to_i%></td>
+    <% else %>
+    <td>Unknown</td>
+    <% end %>
+    <td><%= a_result.fetch("country")%></td>
+    <td><%= a_result.fetch("catno")%></td>
+    <td><%= a_result.fetch("master_id")%></td>
+    <td><%= a_result.fetch("id")%></td>
+    <% if a_result.fetch("formats").at(0).key?("text") %>
+    <td><%= a_result.fetch("formats").at(0).fetch("text")%></td>
+    <% else %>
+    <td>Standard Edition</td>
+    <% end %>
+    <td>
+    <% if a_result.fetch("formats").at(0).fetch("descriptions").include?("Reissue")%>
+      Reissue
+    <% elsif a_result.fetch("formats").at(0).fetch("descriptions").include?("Repress")%>
+      Repress
+    <% elsif a_result.fetch("formats").at(0).fetch("descriptions").include?("Unofficial Release")%>
+      Unofficial Release
+    <% elsif a_result.fetch("formats").at(0).fetch("descriptions").include?("Mispress")%>
+      Mispress
+    <% elsif a_result.fetch("formats").at(0).fetch("descriptions").include?("Misprint")%>
+      Misprint
+    <% elsif a_result.fetch("formats").at(0).fetch("descriptions").include?("Special Edition")%>
+      Special Edition
+    <% elsif a_result.fetch("formats").at(0).fetch("descriptions").include?("Test Pressing")%>
+      Test Pressing
+    <% else %>
+      First Pressing
+    <% end %>
+    </td>
+    <td><a href="/search/catno/pressing/<%= a_result.fetch("id")%>">See details</a></td>
+</tr>
+<% end %>
+</table>
+
+<script>
+function sortTable() {
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("Results");
+  switching = true;
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < rows.length - 1; i++) {
+      shouldSwitch = false;
+
+      // Extract the values from the current and next rows
+      var year1 = parseInt(rows[i].getElementsByTagName("td")[0].textContent, 10);
+      var year2 = parseInt(rows[i + 1].getElementsByTagName("td")[0].textContent, 10);
+
+      var country1 = rows[i].getElementsByTagName("td")[1].textContent;
+      var country2 = rows[i + 1].getElementsByTagName("td")[1].textContent;
+
+      var version1 = rows[i].getElementsByTagName("td")[2].textContent;
+      var version2 = rows[i + 1].getElementsByTagName("td")[2].textContent;
+
+      // Compare Year, Country, and Version in that order
+      if (year1 > year2 || (year1 === year2 && country1 > country2) || (year1 === year2 && country1 === country2 && version1 > version2)) {
+        shouldSwitch = true;
+        break;
+      }
+    }
+
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+
+sortTable();
+</script>

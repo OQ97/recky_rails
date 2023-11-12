@@ -1,7 +1,12 @@
 <Title>Recky | Find pressing</Title>
 
-<h1>Find pressing </h1>
-<img src="<%= @cover_url%>" alt="Album cover for <%= @record %> by <%= @arist %>" height=300>
+<h1>Find pressing</h1>
+<img src="<%= @cover_url %>" alt="Album cover for <%= @record %> by <%= @arist %>" height=300>
+<p>
+<a href="/search/catno/explore/<%= @master_id %>/<%= @catno %>">
+<Button>Explore all pressings</Button>
+</a>
+</p>
 <p><%= @artist %></p>
 <p><%= @record %></p>
 <p><%= @catno %></p>
@@ -24,9 +29,10 @@
     <option value="" disabled selected>Select a version</option>
     <!-- Add more options here -->
 </select>
-<button id="goButton" disabled>Go</button>
+<button id="goButton" disabled onclick="redirectToSelection();">Go</button>
 
 <script>
+
 var yearsByCountry = {
     <% unique_years.sort.uniq.each do |unique_year| %>
     '<%= unique_year %>': [
@@ -107,6 +113,20 @@ function checkSelection() {
         goButton.removeAttribute("disabled");
     } else {
         goButton.setAttribute("disabled", "disabled");
+    }
+}
+
+function redirectToSelection() {
+    var year = document.getElementById("year").value;
+    var country = document.getElementById("country").value;
+    var text = document.getElementById("text").value;
+
+    if (year && country && text) {
+        // Concatenate the selections
+        var selections = country + " | " + text;
+
+        // Redirect to /findpressing with the concatenated selections
+        window.location.href = "/search/catno/finding/" + selections;
     }
 }
 

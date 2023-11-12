@@ -1,2 +1,29 @@
-<h1>Multreleases</h1>
-<%= @catno %>
+<h1>We found multiple releases for the catalogue number <%= @catno %></h1>
+<table>
+
+<tr>
+<th>Cover</th>
+<th>Catalogue number</th>
+<th>Artist</th>
+<th>Title</th>
+<th>Genre</th>
+<th>Label</th>
+<th>Links</th>
+</tr>
+
+<% @masters_list.each do |a_master| %>
+<tr>
+  <td><img src="<%= a_master.fetch("cover_image")%>" alt="Album cover" height=100></td>
+  <td><%= a_master.fetch("catno")%></td>
+  <td><%= a_master.fetch("title").split(" - ").at(0)%></td>
+  <td><%= a_master.fetch("title").split(" - ").at(1)%></td>
+  <td><%= a_master.fetch("style").join(", ")%></td>
+  <td><%= a_master.fetch("label").uniq.sort.join(", ")%></td>
+  <td>
+  <a href="/search/catno/findpressing/<%= a_master.fetch("master_id")%>/<%= @catno %>"><Button>Find a pressing</Button></a>
+  <a href="/search/catno/explore/<%= a_master.fetch("master_id")%>/<%= @catno %>"><Button>Explore all pressings</Button></a>
+  </td>
+</tr>
+<% end %>
+
+</table>

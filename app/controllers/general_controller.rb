@@ -16,4 +16,105 @@ def notfound
   render(template: "general/notfound")
 end 
 
+def pressing
+  #calling record id from URL
+  @record_id = params.fetch("recordid").to_i
+  @found_pressing = $results_array.find{ |hash| hash["id"] == @record_id }
+ 
+    #finding other basic info about album
+    @catno = @found_pressing.fetch("catno")
+    @master_id = @found_pressing.fetch("master_id")
+    @genre = @found_pressing.fetch("style").join(", ")
+    @press_year = @found_pressing.fetch("year")
+    @press_country = @found_pressing.fetch("country")
+    @cover_url = @found_pressing.fetch("cover_image")
+    @label = @found_pressing.fetch("label").uniq.sort.join(", ")
+    
+    if @found_pressing.fetch("formats").at(0).key?("text")
+      @text = @found_pressing.fetch("formats").at(0).fetch("text")
+    else 
+      @text = "Standard Edition"
+    end
+  
+    if @found_pressing.fetch("formats").at(0).fetch("descriptions").include?("Reissue")
+        @release_type = "Reissue"
+      elsif @found_pressing.fetch("formats").at(0).fetch("descriptions").include?("Repress")
+        @release_type = "Repress"
+      elsif @found_pressing.fetch("formats").at(0).fetch("descriptions").include?("Unofficial Release")
+        @release_type = "Unofficial Release"
+      elsif @found_pressing.fetch("formats").at(0).fetch("descriptions").include?("Mispress")
+        @release_type = "Mispress"
+     elsif @found_pressing.fetch("formats").at(0).fetch("descriptions").include?("Misprint")
+      @release_type = "Misprint"
+      elsif @found_pressing.fetch("formats").at(0).fetch("descriptions").include?("Special Edition")
+        @release_type = "Special Edition"
+      elsif @found_pressing.fetch("formats").at(0).fetch("descriptions").include?("Test Pressing")
+        @release_type = "Test Pressing"
+      else 
+        @release_type = "First Pressing"
+      end
+  
+  
+    #External links:
+    @discogs_buy_link = "https://www.discogs.com/sell/release/#{@record_id}?ev=rb"
+    ebay_search_term = @artist.to_s+" "+@record.to_s+" "+@catno.to_s+" "+@press_year.to_s+" "+@text.to_s+" Vinyl"
+    ebay_search_term_fixed = ebay_search_term.gsub(" ", "+")
+    @ebay_search_link = "https://www.ebay.com/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw=#{ebay_search_term_fixed}&_sacat=0"
+  
+    #getting tracklist from API
+    @discogs_url_release = "https://api.discogs.com/releases/#{@record_id}?&key=#{$discogs_key}&secret=#{$discogs_secret}"
+    raw_discogs_data_release = HTTP.get(@discogs_url_release)
+    @parsed_discogs_data_release = JSON.parse(raw_discogs_data_release)
+    @tracklist = @parsed_discogs_data_release.fetch("tracklist")
+    image_links = @parsed_discogs_data_release.fetch("images")
+    @image_link_array = []
+    image_links.each do |an_image|
+      uri = an_image.fetch("uri")
+      @image_link_array << uri
+    end 
+  
+    #Tracklist to table
+    @html_table = "<table>\n"
+    @html_table += "<tr><th>Position</th><th>Title</th><th>Duration</th></tr>\n"  # Table header row
+    @tracklist.each do |track|
+      @html_table += "<tr>"
+      @html_table += "<td>#{track['position']}</td>"
+      @html_table += "<td>#{track['title']}</td>"
+      @html_table += "<td>#{track['duration']}</td>"
+      @html_table += "</tr>\n"
+    end
+    @html_table += "</table>"
+
+     #finding artist and record name from results array
+
+     @artist = @parsed_discogs_data_release.fetch("artists").at(0).fetch("name")
+     @record = @parsed_discogs_data_release.fetch("title")
+  
+    #Retreiving price from API
+    @prices_discogs_url = "https://api.discogs.com/marketplace/price_suggestions/#{@record_id}?&token=#{$discogs_token}"
+    raw_discogs_price_data = HTTP.get(@prices_discogs_url)
+    @parsed_discogs_price_data = JSON.parse(raw_discogs_price_data)
+  
+    if @parsed_discogs_price_data.fetch("Mint (M)").fetch("value").nil?
+      @new = "N/A"
+      @used_excellent = "N/A"
+      @used_working = "N/A"
+    else
+      #getting prices for different conditions
+      @mint = @parsed_discogs_price_data.fetch("Mint (M)").fetch("value")
+      @near_mint = @parsed_discogs_price_data.fetch("Near Mint (NM or M-)").fetch("value")
+      @Very_good_plus = @parsed_discogs_price_data.fetch("Very Good Plus (VG+)").fetch("value")
+      @Very_good = @parsed_discogs_price_data.fetch("Very Good (VG)").fetch("value")
+      @good_plus = @parsed_discogs_price_data.fetch("Good Plus (G+)").fetch("value")
+      @good = @parsed_discogs_price_data.fetch("Good (G)").fetch("value")
+      @fair = @parsed_discogs_price_data.fetch("Fair (F)").fetch("value")
+      @poor = @parsed_discogs_price_data.fetch("Poor (P)").fetch("value")
+      #calculating new prices
+      @new = (@mint+@near_mint)/2
+      @used_excellent = (@Very_good_plus+@Very_good)/2
+      @used_working = (@good_plus+@good)/2
+    end 
+  
+  end   
+
 end 
