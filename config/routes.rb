@@ -2,19 +2,32 @@ Rails.application.routes.draw do
   #General directories 
   get("/", controller:"general", action: "homepage")
   get("/notfound", controller:"general", action: "notfound")
+  get("/search/", controller: "catno", action: "search")
+  get("search/multreleases/:searchitem", controller: "general", action: "multreleases")
+  get("search/findpressing/:searchitem", controller: "general", action: "findpressing")
+  get("search/pressing/:searchitem", controller: "general", action: "pressing")
+  get("/search/finding/:user_selection", controller: "general", action: "finding")
+  get("/search/explore/:searchitem", controller: "general", action: "explore")
+
 
   #Catno
   get("/search/catno", controller: "catno", action: "search")
-  get("search/catno/multreleases/:catno", controller: "catno", action: "multreleases")
-  get("search/catno/findpressing/:masterid/:catno", controller: "general", action: "findpressing")
-  get("search/catno/pressing/:recordid", controller: "general", action: "pressing")
+  get("/search/catno/:artist_search", controller: "catno", action: "search")
+  get("search/catno/multreleases/:searchitem", controller: "general", action: "multreleases")
+  get("search/catno/findpressing/:searchitem", controller: "general", action: "findpressing")
+  get("search/catno/pressing/:searchitem", controller: "general", action: "pressing")
   get("/search/catno/finding/:user_selection", controller: "general", action: "finding")
-  get("/search/catno/explore/:masterid/:catno", controller: "catno", action: "explore")
+  get("/search/catno/explore/:searchitem", controller: "general", action: "explore")
 
-  #Name
+  #Record name
   get("/search/name", controller: "name", action: "search")
-  get("search/name/multreleases/:text", controller: "name", action: "multreleases")
-  get("search/name/findpressing/:masterid/:text", controller: "general", action: "findpressing")
-  get("search/name/pressing/:recordid", controller: "general", action: "pressing")
+  get("search/name/multreleases/:searchitem", controller: "general", action: "multreleases")
+  get("search/name/findpressing/:searchitem", controller: "general", action: "findpressing")
+  get("search/name/pressing/:searchitem", controller: "general", action: "pressing")
+
+  #Artist
+  get("/search/artist", controller:"artist", action: "search")
+  get("/search/findartist/:artist_query", controller:"artist", action: "find")
+  get("/search/artist/:artist_query", controller:"artist", action: "artist")
 
 end

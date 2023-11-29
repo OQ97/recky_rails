@@ -1,15 +1,18 @@
 <Title>Recky | Explore pressings</Title>
 
 <h1>Explore all pressings</h1>
+<% if $query_total_results > 100 %>
+<p>Your query produced <%= number_with_delimiter($query_total_results) %> results. We can only show 100 of them given our server's capacity.</p>
+<p>If you can't find the record you are looking for, try searching by catalogue number or barcode.</p>
+<% end %>
 <img src="<%= @cover_url %>" alt="Album cover for <%= @record %> by <%= @arist %>" height=300>
 <p>
-<a href="/search/catno/findpressing/<%= @master_id %>/<%= @catno %>">
+<a href="/search/findpressing/<%= @master_id %>">
 <Button>Find a pressing</Button>
 </a>
 </p>
 <p><%= @artist %></p>
 <p><%= @record %></p>
-<p><%= @catno %></p>
 
 <table id="Results">
 
@@ -58,7 +61,7 @@
       First Pressing
     <% end %>
     </td>
-    <td><a href="/search/catno/pressing/<%= a_result.fetch("id")%>">See details</a></td>
+    <td><a href="/search/pressing/<%= a_result.fetch("id")%>">See details</a></td>
 </tr>
 <% end %>
 </table>

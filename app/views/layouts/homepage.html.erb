@@ -1,0 +1,39 @@
+<title>Recky | Home</title>
+
+<div>
+  <form action="/search/artist">
+  <label for="search_artist">Search by artist <em>(Beta)</em>:</label>
+  <input id="search_artist" type="text" name="searchartist" placeholder="E.g., <%= @placeholder_artist %>" required>
+  <Button>Search</Button>
+  </form>
+</div>
+
+<br>
+
+<div>
+  <form action="/search/name">
+  <label for="search_name">Search by release title <em>(Beta)</em>:</label>
+  <input id="search_name" type="text" name="searchtext" placeholder="E.g., <%= @placeholder_record %>" required>
+  <Button>Search</Button>
+  </form>
+</div>
+
+<br>
+
+<div>
+<form action="/search/catno">
+<label for="search_catno">Search by catalogue number:</label>
+<input id="search_catno" type="text" name="catno" placeholder="E.g., <%= @placeholder_catno %>" required>
+<Button>Search</Button>
+</form>
+</div>
+
+<br>
+
+<div>
+  <form action="/search/barcode">
+  <label for="search_barcode">Search by barcode:</label>
+  <input id="search_barcode" type="text" name="searchbarcode" placeholder="E.g., <%= @placeholder_barcode %>" required>
+  <Button>Search</Button>
+  </form>
+</div>

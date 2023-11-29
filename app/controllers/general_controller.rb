@@ -1,24 +1,26 @@
 class GeneralController < ApplicationController
 
 def homepage
-  placeholders = ["Unknown Pleasures | FACT10 | 0825646183906", "Purple Rain | RCV1 547450 | 081227880385", "All Things Must Pass | 3565241 | 602435652412", "Madvillainy | STH2065 | 659457206512", "Salad Days | CT-193 | 817949019471", "Schlagenheim | RT0073LP | 191402007312", "Titanic Rising | SP1232 | 098787123210", "In The Aeroplane Over The Sea | MRG136LP | 673855013619", "To Pimp a Butterfly | B0023464-01 | 602547311009", "Bonito Generation | PRC-375 | 644110037510"]
+  placeholders = ["Joy Division | Unknown Pleasures | FACT10 | 0825646183906", "Prince | Purple Rain | RCV1 547450 | 081227880385", "George Harrison | All Things Must Pass | 3565241 | 602435652412", "Madvillain | Madvillainy | STH2065 | 659457206512", "Mac DeMarco | Salad Days | CT-193 | 817949019471", "black midi | Schlagenheim | RT0073LP | 191402007312", "Weyes Blood | Titanic Rising | SP1232 | 098787123210", "Neutral Milk Hotel | In The Aeroplane Over The Sea | MRG136LP | 673855013619", "Kendrick Lamar | To Pimp a Butterfly | B0023464-01 | 602547311009", "Kero Kero Bonito | Bonito Generation | PRC-375 | 644110037510"]
 
   placeholder_selection = placeholders[rand(0..9)]
   placeholder_items = placeholder_selection.split(" | ")
-  @placeholder_name = placeholder_items[0]
-  @placeholder_catno = placeholder_items[1]
-  @placeholder_barcode = placeholder_items[2]
+  @placeholder_artist = placeholder_items[0]
+  @placeholder_record = placeholder_items[1]
+  @placeholder_catno = placeholder_items[2]
+  @placeholder_barcode = placeholder_items[3]
   
-  render(template: "general/homepage")
+  render(layout: "homepage")
 end 
 
 def notfound
+  
   render(template: "general/notfound")
 end 
 
 def pressing
   #calling record id from URL
-  @record_id = params.fetch("recordid").to_i
+  @record_id = params.fetch("searchitem").to_i
   @found_pressing = $results_array.find{ |hash| hash["id"] == @record_id }
  
     #finding other basic info about album
@@ -55,11 +57,7 @@ def pressing
       end
   
   
-    #External links:
-    @discogs_buy_link = "https://www.discogs.com/sell/release/#{@record_id}?ev=rb"
-    ebay_search_term = @artist.to_s+" "+@record.to_s+" "+@catno.to_s+" "+@press_year.to_s+" "+@text.to_s+" Vinyl"
-    ebay_search_term_fixed = ebay_search_term.gsub(" ", "+")
-    @ebay_search_link = "https://www.ebay.com/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw=#{ebay_search_term_fixed}&_sacat=0"
+
   
     #getting tracklist from API
     @discogs_url_release = "https://api.discogs.com/releases/#{@record_id}?&key=#{$discogs_key}&secret=#{$discogs_secret}"
@@ -89,18 +87,19 @@ def pressing
 
      @artist = @parsed_discogs_data_release.fetch("artists").at(0).fetch("name")
      @record = @parsed_discogs_data_release.fetch("title")
+
+    #External links:
+    @discogs_buy_link = "https://www.discogs.com/sell/release/#{@record_id}?ev=rb"
+    ebay_search_term = @artist.to_s+" "+@record.to_s+" "+@catno.to_s+" "+@press_year.to_s+" "+" Vinyl"
+    ebay_search_term_fixed = ebay_search_term.gsub(" ", "+")
+    @ebay_search_link = "https://www.ebay.com/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw=#{ebay_search_term_fixed}&_sacat=0"
   
     #Retreiving price from API
     @prices_discogs_url = "https://api.discogs.com/marketplace/price_suggestions/#{@record_id}?&token=#{$discogs_token}"
     raw_discogs_price_data = HTTP.get(@prices_discogs_url)
     @parsed_discogs_price_data = JSON.parse(raw_discogs_price_data)
   
-    if @parsed_discogs_price_data.fetch("Mint (M)").fetch("value").nil?
-      @new = "N/A"
-      @used_excellent = "N/A"
-      @used_working = "N/A"
-    else
-      #getting prices for different conditions
+    if @parsed_discogs_price_data.key?("Mint (M)")
       @mint = @parsed_discogs_price_data.fetch("Mint (M)").fetch("value")
       @near_mint = @parsed_discogs_price_data.fetch("Near Mint (NM or M-)").fetch("value")
       @Very_good_plus = @parsed_discogs_price_data.fetch("Very Good Plus (VG+)").fetch("value")
@@ -113,6 +112,11 @@ def pressing
       @new = (@mint+@near_mint)/2
       @used_excellent = (@Very_good_plus+@Very_good)/2
       @used_working = (@good_plus+@good)/2
+    else
+      #getting prices for different conditions
+      @new = "N/A"
+      @used_excellent = "N/A"
+      @used_working = "N/A"
     end 
   
 end   
@@ -120,7 +124,7 @@ end
 
 def findpressing
   #Retrieving master and catno from URL
-  @master_id = params.fetch("masterid").to_i
+  @master_id = params.fetch("searchitem").to_i
   @catno = $results_array.at(0).fetch("catno")
 
   #Finding first record that matches master and catno for basic album info
@@ -198,5 +202,50 @@ def finding
 
 end 
 
+
+def explore
+  #Getting master id and catno from URL
+  @master_id = params.fetch("searchitem").to_i
+
+  #Finding first record that matches master and catno for basic album info
+  match_record = $results_array.find do |hash|
+    hash["master_id"] == @master_id
+  end 
+  @cover_url = match_record.fetch("cover_image")
+
+  #Breaking down artist name and record name
+  title = match_record.fetch("title")
+  artist_record = title.split(" - ")
+  @artist = artist_record.at(0)
+  @record = artist_record.at(1)
+
+  #Filtering results array for results that match master id and catno
+  @filtered_results = $results_array.select do |hash|
+    hash["master_id"] == @master_id
+  end
+
+  render(template: "general/explore")
+end 
+
+def multreleases
+  @catno = params.fetch("searchitem")
+
+  first_masters = {}
+  @masters_list = $results_array.select do |hash|
+    master_id = hash["master_id"]
+    if master_id != 0 && !first_masters.key?(master_id)
+      first_masters[master_id] = true
+      true
+    else
+      false
+    end
+  end
+
+  master_counts = $results_array.group_by { |h| h["master_id"] }.transform_values(&:count)
+  @masters_list = @masters_list.sort_by { |h| -master_counts.fetch(h["master_id"], 0) }
+
+
+  render(template: "general/multreleases")
+end 
 
 end 

@@ -1,10 +1,13 @@
 <Title>Recky | Find pressing</Title>
 
 <h1>Find pressing</h1>
-<p><%= @drop_array %></p>
+<% if $query_total_results > 100 %>
+<p>Your query produced <%= number_with_delimiter($query_total_results) %> results. We can only show 100 of them given our server's capacity.</p>
+<p>If you can't find the record you are looking for, try searching by catalogue number or barcode.</p>
+<% end %>
 <img src="<%= @cover_url %>" alt="Album cover for <%= @record %> by <%= @arist %>" height=300>
 <p>
-<a href="/search/catno/explore/<%= @master_id %>/<%= @catno %>">
+<a href="/search/explore/<%= @master_id %>">
 <Button>Explore all pressings</Button>
 </a>
 </p>
@@ -127,7 +130,7 @@ function redirectToSelection() {
         var selections = country + " | " + text;
 
         // Redirect to /findpressing with the concatenated selections
-        window.location.href = "/search/catno/finding/" + selections;
+        window.location.href = "/search/finding/" + selections;
     }
 }
 

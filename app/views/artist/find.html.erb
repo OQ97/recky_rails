@@ -1,0 +1,24 @@
+<title>Multiple artists were found</title>
+<h1>We found multiple artists for your search</h1>
+<% if $query_total_results > 100 %>
+<p>Your query produced <%= number_with_delimiter($query_total_results) %> results. We can only show 100 of them given our server's capacity.</p>
+<p>If you can't find the record you are looking for, try searching by catalogue number or barcode.</p>
+<% end %>
+<table>
+<tr>
+<th>Picture</th>
+<th>Artist name</th>
+<th>Links</th>
+</tr>
+
+<% @artist_array.each do |an_artist| %>
+<tr>
+  <td><img src="<%= an_artist.fetch("cover_image")%>" alt="Artist photo" height=100></td>
+  <td><%= an_artist.fetch("title")%></td>
+  <td>
+  <a href="/search/artistid/<%= an_artist.fetch("id")%>"><Button>Search releases by this artist</Button></a>
+  </td>
+</tr>
+<% end %>
+
+</table>

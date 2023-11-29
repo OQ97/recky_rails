@@ -1,29 +1,58 @@
-<title>Recky | Home</title>
+<!DOCTYPE html>
+<html>
 
-<div>
-  <form action="/search/name">
-  <label for="search_name">Search by name:</label>
-  <input id="search_name" type="text" name="searchtext" placeholder="E.g., <%= @placeholder_name %>" required>
-  <Button>Search</Button>
-  </form>
-</div>
+  <head>
+    <title>Recky | Home</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
 
-<br>
+  <body>
+    <button type="button" class="btn btn-primary">Primary</button>
 
-<div>
-<form action="/search/catno">
-<label for="search_catno">Search by catalogue number:</label>
-<input id="search_catno" type="text" name="catno" placeholder="E.g., <%= @placeholder_catno %>" required>
-<Button>Search</Button>
-</form>
-</div>
 
-<br>
 
-<div>
-  <form action="/search/barcode">
-  <label for="search_barcode">Search by barcode:</label>
-  <input id="search_barcode" type="text" name="searchbarcode" placeholder="E.g., <%= @placeholder_barcode %>" required>
-  <Button>Search</Button>
-  </form>
-</div>
+
+    <div>
+      <form action="/search/artist">
+        <label for="search_artist">Search by artist <em>(Beta)</em>:</label>
+        <input id="search_artist" type="text" name="searchartist" placeholder="E.g., <%= @placeholder_artist %>" required>
+        <Button>Search</Button>
+      </form>
+    </div>
+
+    <br>
+
+    <div>
+      <form action="/search/name">
+        <label for="search_name">Search by release title <em>(Beta)</em>:</label>
+        <input id="search_name" type="text" name="searchtext" placeholder="E.g., <%= @placeholder_record %>" required>
+        <Button>Search</Button>
+      </form>
+    </div>
+
+    <br>
+
+    <div>
+      <form action="/search/catno">
+        <label for="search_catno">Search by catalogue number:</label>
+        <input id="search_catno" type="text" name="catno" placeholder="E.g., <%= @placeholder_catno %>" required>
+        <Button>Search</Button>
+      </form>
+    </div>
+
+    <br>
+
+    <div>
+      <form action="/search/barcode">
+        <label for="search_barcode">Search by barcode:</label>
+        <input id="search_barcode" type="text" name="searchbarcode" placeholder="E.g., <%= @placeholder_barcode %>" required>
+        <Button>Search</Button>
+      </form>
+    </div>
+  </body>
+
+</html>

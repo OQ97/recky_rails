@@ -1,5 +1,5 @@
 <Title>Recky | <%= @record %></Title>
-<h1>Pressing</h1>
+<h1><u><%= @artist %></u> - <%= @record %></h1>
 <h1><%= @recordid %></h1>
 <div id="carousel-container" style="width: 300px; margin: 0; overflow: hidden; position: relative; left: 0;">
   <button id="prevBtn" style="cursor: pointer; display: block; position: absolute; top: 50%; transform: translateY(-50%); padding: 10px; background-color: #007BFF; color: #fff; font-size: 16px; border: none; border-radius: 5px; left: 10px; z-index: 1;" onclick="prevSlide()"><</button>
@@ -12,20 +12,36 @@
   <button id="nextBtn" style="cursor: pointer; display: block; position: absolute; top: 50%; transform: translateY(-50%); padding: 10px; background-color: #007BFF; color: #fff; font-size: 16px; border: none; border-radius: 5px; right: 10px;" onclick="nextSlide()">></button>
 </div>
 <p>
-<a href="/search/catno/explore/<%= @master_id %>/<%= @catno %>">
+<a href="/search/explore/<%= @master_id %>">
 <Button>Explore all pressings</Button>
 </a>
 </p>
 <p>
-<a href="/search/catno/findpressing/<%= @master_id %>/<%= @catno %>">
+<a href="/search/findpressing/<%= @master_id %>">
 <Button>Find a pressing</Button>
 </a>
 </p>
-<p>Artist: <%= @artist %></p>
-<p>Record: <%= @record %></p>
-<p>New / Like new: $<%= sprintf("%.2f", @new).to_f %></p>
-<p>Good / Excellent condition: $<%= sprintf("%.2f", @used_excellent).to_f %></p>
-<p>Poor working condition: $<%= sprintf("%.2f", @used_working).to_f %></p>
+<p>New / Like new: 
+<% if @new == "N/A" %>
+<%= @new %>
+<% else %>
+$<%= sprintf("%.2f", @new).to_f %>
+<% end %>
+</p>
+<p>Good / Excellent condition: 
+<% if @used_excellent == "N/A" %>
+<%= @used_excellent %>
+<% else %>
+$<%= sprintf("%.2f", @used_excellent).to_f %>
+<% end %>
+</p>
+<p>Poor working condition: 
+<% if @used_working == "N/A" %>
+<%= @used_working %>
+<% else %>
+$<%= sprintf("%.2f", @used_working).to_f %>
+<% end %>
+</p>
 <p>Catalogue number: <%= @catno %></p>
 <p>Record label: <%= @label %></p>
 <p>Pressing release year: <%= @press_year %></p>

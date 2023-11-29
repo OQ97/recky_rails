@@ -1,0 +1,48 @@
+<title><%= @artist_query.titleize %></title>
+<h1><%= @artist_query.titleize %></h1>
+<table>
+<% if $query_total_results > 100 %>
+<p>Your query produced <%= number_with_delimiter($query_total_results) %> results. We can only show 100 of them given our server's capacity.</p>
+<p>If you can't find the record you are looking for, try searching by catalogue number or barcode.</p>
+<% end %>
+<tr>
+<th>Cover</th>
+<th>Catalogue number</th>
+<th>Artist</th>
+<th>Title</th>
+<th>Format</th>
+<th>Genre</th>
+<th>Label</th>
+<th>Links</th>
+</tr>
+
+<% @masters_list.each do |a_master| %>
+<tr>
+  <td><img src="<%= a_master.fetch("cover_image")%>" alt="Album cover" height=100></td>
+  <td><%= a_master.fetch("catno")%></td>
+  <td><%= a_master.fetch("title").split(" - ").at(0)%></td>
+  <td><%= a_master.fetch("title").split(" - ").at(1)%></td>
+  <td>
+  <% if a_master.fetch("format").include?("7\"")  %>
+    7-inch
+  <% elsif a_master.fetch("format").include?("10\"") %>
+    10-inch
+  <% else %>
+    12-inch
+  <% end %>
+  </td>
+  <td><%= a_master.fetch("style").join(", ")%></td>
+  <td><%= a_master.fetch("label").uniq.sort.join(", ")%></td>
+  <td>
+  <% master_count = $results_array.count { |hash| hash["master_id"] == a_master.fetch("master_id") } %>
+  <% if master_count == 1 %>
+  <a href="/search/pressing/<%= a_master.fetch("id")%>"><Button>See pressing</Button></a>
+  <% else %>
+  <a href="/search/findpressing/<%= a_master.fetch("master_id")%>"><Button>Find a pressing</Button></a>
+  <a href="/search/explore/<%= a_master.fetch("master_id")%>"><Button>Explore all pressings</Button></a>
+  <% end %>
+  </td>
+</tr>
+<% end %>
+
+</table>
