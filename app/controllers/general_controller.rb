@@ -10,7 +10,7 @@ def homepage
   @placeholder_catno = placeholder_items[2]
   @placeholder_barcode = placeholder_items[3]
   
-  render(layout: "homepage")
+  render(template: "general/homepage")
 end 
 
 def notfound
