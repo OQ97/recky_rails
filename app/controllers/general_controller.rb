@@ -449,4 +449,10 @@ def multreleases
   render(template: "general/multreleases")
 end 
 
+def about
+  render(template: "general/about")
+end 
+
+
+
 end 

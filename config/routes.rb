@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get("search/pressing/:searchitem", controller: "general", action: "pressing")
   get("/search/finding/:user_selection", controller: "general", action: "finding")
   get("/search/explore/:searchitem", controller: "general", action: "explore")
-
+  get("/about", controller: "general", action: "about")
 
   #Catno
   get("/search/catno", controller: "catno", action: "search")
