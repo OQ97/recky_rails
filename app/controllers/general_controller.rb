@@ -278,15 +278,21 @@ class GeneralController < ApplicationController
     raw_discogs_data_release = HTTP.get(@discogs_url_release)
     @parsed_discogs_data_release = JSON.parse(raw_discogs_data_release)
     @tracklist = @parsed_discogs_data_release.fetch("tracklist")
-    image_links = @parsed_discogs_data_release.fetch("images")
+    image_links = @parsed_discogs_data_release.key?("images") ? @parsed_discogs_data_release["images"] : ["https://i.imgur.com/dccTEc1.png"]
+    image_links = [image_links] unless image_links.is_a?(Array)
     @image_link_array = []
+    # Ensure that image_links is an array of hashes
     image_links.each do |an_image|
-      uri = an_image.fetch("uri")
-      @image_link_array << uri
+      if an_image.is_a?(Hash) && an_image.key?("uri")
+        uri = an_image["uri"]
+        @image_link_array << uri
+      elsif an_image.is_a?(String)
+        @image_link_array << an_image
+      end
     end
 
     #Release notes
-    @notes = @parsed_discogs_data_release.fetch("notes")
+    @notes = @parsed_discogs_data_release.key?("notes") ? @parsed_discogs_data_release["notes"] : "N/A"
 
     #Tracklist to table
     @html_table = "<table class='table table-striped table-hover align-middle'>\n"
