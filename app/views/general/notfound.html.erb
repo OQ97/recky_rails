@@ -1,11 +1,56 @@
-<h1>No results were found for your search.<h1>
+<Title>Recky | No results</title>
 
-<%= $query_total_results %>
-<%= $results_array %>
-<button onclick="goBack()">Go Back</button>
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/"><img src="https://i.imgur.com/d7ENmw1.png" alt="Recky logo" height="40"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/">New search</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="mailto:oquinter@chicagobooth.edu">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <h1 class="text-left">We couldn't find an exact match for your search</h1>
+</div>
+
+<% if $query_total_results >0 %>
+  <div class="container-fluid">
+    <h2 class="text-left">Did you mean:</h2>
+  <ul class="list-group">
+    <% $results_array.each do |a_result|%>
+    <%if a_result.fetch("type") == "artist" %>
+      <% redirect_notfound = a_result.fetch("title").gsub(" ", "+") %>
+      <li class="list-group-item"><a href="/search/artist/<%= redirect_notfound %>" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"><%= a_result.fetch("title")%></a></li>
+    <% else %>
+      popo
+    <% end %>
+    <% end %>
+  </ul>
+  </div>
+  
+<% else %>
+
+<% end %>
+
+<div class="container-fluid">
+  <button type="button" class="btn btn-warning py-2" onclick="goBack()">Go Back</button>
+</div>
 
 <script>
-function goBack() {
-  window.history.back();
-}
+  function goBack() {
+    window.history.back();
+  }
 </script>

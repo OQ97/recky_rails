@@ -1,79 +1,101 @@
 <Title>Recky | <%= @record %></Title>
-<h1><u><%= @artist %></u> - <%= @record %></h1>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/"><img src="https://i.imgur.com/d7ENmw1.png" alt="Recky logo" height="40"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/">New search</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="mailto:oquinter@chicagobooth.edu">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<h1><strong><%= @artist %></strong> - <%= @record %></h1>
+
 <h1><%= @recordid %></h1>
 <div id="carousel-container" style="width: 300px; margin: 0; overflow: hidden; position: relative; left: 0;">
   <button id="prevBtn" style="cursor: pointer; display: block; position: absolute; top: 50%; transform: translateY(-50%); padding: 10px; background-color: #007BFF; color: #fff; font-size: 16px; border: none; border-radius: 5px; left: 10px; z-index: 1;" onclick="prevSlide()"><</button>
-  <div class="carousel" style="display: flex;">
-    <% @image_link_array.each do |an_image|%>
-    <img class="carousel-image" src="<%= an_image %>" alt="Album image" style="height: 300px; width: 100%; object-fit: cover;">
-    <% end %>
-   </div>
-   <div id="counter" style="position: absolute; top: 10px; right: 10px; color: #fff; font-size: 16px;"></div>
-  <button id="nextBtn" style="cursor: pointer; display: block; position: absolute; top: 50%; transform: translateY(-50%); padding: 10px; background-color: #007BFF; color: #fff; font-size: 16px; border: none; border-radius: 5px; right: 10px;" onclick="nextSlide()">></button>
-</div>
-<p>
-<a href="/search/explore/<%= @master_id %>">
-<Button>Explore all pressings</Button>
-</a>
-</p>
-<p>
-<a href="/search/findpressing/<%= @master_id %>">
-<Button>Find a pressing</Button>
-</a>
-</p>
-<p>New / Like new: 
-<% if @new == "N/A" %>
-<%= @new %>
-<% else %>
-$<%= sprintf("%.2f", @new).to_f %>
-<% end %>
-</p>
-<p>Good / Excellent condition: 
-<% if @used_excellent == "N/A" %>
-<%= @used_excellent %>
-<% else %>
-$<%= sprintf("%.2f", @used_excellent).to_f %>
-<% end %>
-</p>
-<p>Poor working condition: 
-<% if @used_working == "N/A" %>
-<%= @used_working %>
-<% else %>
-$<%= sprintf("%.2f", @used_working).to_f %>
-<% end %>
-</p>
-<p>Catalogue number: <%= @catno %></p>
-<p>Record label: <%= @label %></p>
-<p>Pressing release year: <%= @press_year %></p>
-<p>Pressing country: <%= @press_country %></p>
-<p>Version: <%= @text %></p>
-<p>Release type: <%= @release_type %></p>
-<p>Genre: <%= @genre %></p>
-<p>Buy on Discogs: <a href="<%= @discogs_buy_link %>" target="_blank">Go to Discogs</a></p>
-<p>Buy on eBay: <a href="<%= @ebay_search_link %>" target="_blank">Go to eBay</a></p>
-<%= @html_table.html_safe %>
+      <div class="carousel" style="display: flex;">
+        <% @image_link_array.each do |an_image|%>
+          <img class="carousel-image" src="<%= an_image %>" alt="Album image" style="height: 300px; width: 100%; object-fit: cover;">
+        <% end %>
+      </div>
+      <div id="counter" style="position: absolute; top: 10px; right: 10px; color: #fff; font-size: 16px;"></div>
+      <button id="nextBtn" style="cursor: pointer; display: block; position: absolute; top: 50%; transform: translateY(-50%); padding: 10px; background-color: #007BFF; color: #fff; font-size: 16px; border: none; border-radius: 5px; right: 10px;" onclick="nextSlide()">></button>
+    </div>
+    <p>
+      <a href="/search/explore/<%= @master_id %>">
+        <Button>Explore all pressings</Button>
+      </a>
+    </p>
+    <p>
+      <a href="/search/findpressing/<%= @master_id %>">
+        <Button>Find a pressing</Button>
+      </a>
+    </p>
+    <p>New / Like new: 
+      <% if @new == "N/A" %>
+        <%= @new %>
+      <% else %>
+        $<%= sprintf("%.2f", @new).to_f %>
+      <% end %>
+    </p>
+    <p>Good / Excellent condition: 
+      <% if @used_excellent == "N/A" %>
+        <%= @used_excellent %>
+      <% else %>
+        $<%= sprintf("%.2f", @used_excellent).to_f %>
+      <% end %>
+    </p>
+    <p>Poor working condition: 
+      <% if @used_working == "N/A" %>
+        <%= @used_working %>
+      <% else %>
+        $<%= sprintf("%.2f", @used_working).to_f %>
+      <% end %>
+    </p>
+    <p>Catalogue number: <%= @catno %></p>
+    <p>Record label: <%= @label %></p>
+    <p>Pressing release year: <%= @press_year %></p>
+    <p>Pressing country: <%= @press_country %></p>
+    <p>Version: <%= @text %></p>
+    <p>Release type: <%= @release_type %></p>
+    <p>Genre: <%= @genre %></p>
+    <p>Buy on Discogs: <a href="<%= @discogs_buy_link %>" target="_blank">Go to Discogs</a></p>
+    <p>Buy on eBay: <a href="<%= @ebay_search_link %>" target="_blank">Go to eBay</a></p>
+    <%= @html_table.html_safe %>
 
+    <script>
+      let currentIndex = 0;
+        const totalImages = document.querySelectorAll('.carousel-image').length;
 
+        function showSlide() {
+       const newTransformValue = -currentIndex * 100 + '%';
+       document.querySelector('.carousel').style.transform = 'translateX(' + newTransformValue + ')';
+       document.getElementById('counter').innerText = (currentIndex + 1) + ' / ' + totalImages;
+        }
 
-<script>
-   let currentIndex = 0;
-  const totalImages = document.querySelectorAll('.carousel-image').length;
+        function nextSlide() {
+       currentIndex = (currentIndex + 1) % totalImages;
+       showSlide();
+        }
 
-  function showSlide() {
-    const newTransformValue = -currentIndex * 100 + '%';
-    document.querySelector('.carousel').style.transform = 'translateX(' + newTransformValue + ')';
-    document.getElementById('counter').innerText = (currentIndex + 1) + ' / ' + totalImages;
-  }
+        function prevSlide() {
+       currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+       showSlide();
+        }
 
-  function nextSlide() {
-    currentIndex = (currentIndex + 1) % totalImages;
-    showSlide();
-  }
-
-  function prevSlide() {
-    currentIndex = (currentIndex - 1 + totalImages) % totalImages;
-    showSlide();
-  }
-
-  document.addEventListener('DOMContentLoaded', showSlide);
-</script>
+        document.addEventListener('DOMContentLoaded', showSlide);
+    </script>

@@ -52,16 +52,16 @@ def search
       #redirectioning based on wheter there are multiple masters
       $num_masters = @master_ids.uniq.length
       if $num_masters > 1
-        redirect_to "/search/catno/multreleases/#{@catno}"
+        redirect_to "/search/multreleases/#{@catno}"
       else
         @master_id = @master_ids.uniq.at(0) 
-       redirect_to "/search/catno/findpressing/#{@master_ids.uniq.at(0)}"
+       redirect_to "/search/explore/#{@master_ids.uniq.at(0)}"
       end
 
     #redirectioning if there is only one release
     else
       @record_id = $results_array.at(0).fetch("id")
-      redirect_to "/search/catno/pressing/#{@record_id}"
+      redirect_to "/search/pressing/#{@record_id}"
     end 
   end 
 end 

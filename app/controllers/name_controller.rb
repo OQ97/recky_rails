@@ -45,7 +45,7 @@ def search
         redirect_to "/search/multreleases/#{@master_ids.uniq.at(0)}"
       else
         @master_id = @master_ids.uniq.at(0) 
-       redirect_to "/search/findpressing/#{@master_ids.uniq.at(0)}"
+       redirect_to "/search/explore/#{@master_ids.uniq.at(0)}"
       end
 
     #redirectioning if there is only one release
