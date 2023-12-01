@@ -34,15 +34,16 @@
   </symbol>
 </svg>
 
-
-
 <div class="container-fluid">
-  <!-- First Element -->
+  <!-- Title -->
   <div class="row">
-    <div class="col-lg-4 col-md-4 col-12">
+    <div class="col-12">
       <h1 class="text-left"><strong><%= @artist %></strong> - <%= @record %></h1>
     </div>
   </div>
+</div>
+
+<div class="container-fluid">
 
   <% if $query_total_results > 100 %>
   <div class="container-fluid">
@@ -69,7 +70,7 @@
   <div class="row">
     <div class="col-lg-4 col-md-4 col-12">
       <a href="/search/findpressing/<%= @master_id %>">
-        <button type="button" class="btn btn-primary w-100" style="max-width: 345px;">Find a pressing</button>
+        <button type="button" class="btn btn-secondary w-100" style="max-width: 345px;">Find a pressing</button>
       </a>
     </div>
   </div>

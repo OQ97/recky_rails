@@ -90,8 +90,8 @@
               <% if master_count == 1 %>
                 <a href="/search/pressing/<%= a_master.fetch("id")%>"><Button type="button" class="btn btn-info text-white">See details</Button></a>
               <% else %>
-                <a href="/search/findpressing/<%= a_master.fetch("master_id")%>" class="d-block mb-2"><Button type="button" class="btn btn-primary py-1">Find my pressing</Button></a>
-                <a href="/search/explore/<%= a_master.fetch("master_id")%>" class="d-block"><Button type="button" class="btn btn-secondary py-1">See all pressings</Button></a>
+                <a href="/search/explore/<%= a_master.fetch("master_id")%>" class="d-block mb-2"><Button type="button" class="btn btn-primary py-1">See all pressings</Button></a>
+                <a href="/search/findpressing/<%= a_master.fetch("master_id")%>" class="d-block"><Button type="button" class="btn btn-secondary py-1">Find my pressing</Button></a>
               <% end %>
             </td>
           </tr>
