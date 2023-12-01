@@ -43,10 +43,7 @@
   </div>
 </div>
 
-<div class="container-fluid">
-  <!-- First Element -->
-
-  <% if $query_total_results > 100 %>
+<% if $query_total_results > 100 %>
   <div class="container-fluid">
     <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center col-md-12 col-xs-12" role="alert">
       <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
@@ -58,148 +55,136 @@
   </div>
 <% end %>
 
-  <!-- Second Element -->
+<div class="container-fluid">
   <div class="row">
-    <div class="col-lg-4 col-md-4 col-12">
-      <div class="py-2">
-        <img src="<%= @cover_url %>" alt="Album cover for <%= @record %> by <%= @artist %>" width=345>
+    <div class="col-md-3 mb-2">
+      <div class="card border-0">
+        <div class="card-body p-0">
+          <img src="<%= @cover_url %>" alt="Album cover for <%= @record %> by <%= @artist %>" style="width: 100%;">
+          <a href="/search/explore/<%= @master_id %>">
+            <button type="button" class="btn btn-primary w-100" style="margin-top: 10px; margin-bottom: 10px;">See all pressings</button>
+          </a>
+          <select class="form-control" name="year" id="year" onChange="changecont(this.value);" style="margin-bottom: 10px;">
+            <option value="" disabled selected>Select a year</option>
+            <% unique_years = [] %>
+            <% @drop_array.each do |a_year|%>
+              <% drop_year = a_year.split(" | ").first%>
+              <% unique_years << drop_year %>
+            <% end %>
+            <% unique_years.sort.uniq.each do |unique_year|%>
+              <option value="<%= unique_year %>"><%= unique_year %></option>
+            <% end %>
+          </select>
+
+          <select class="form-control" name="country" id="country" onChange="changetext(this.value);" style="margin-bottom: 10px;">
+            <option value="" disabled selected>Select a country</option>
+          </select>
+
+          <select class="form-control" name="text" id="text" onChange="checkSelection();" style="margin-bottom: 10px;">
+            <option value="" disabled selected>Select a version</option>
+          </select>
+          <button type="button" class="btn btn-success w-100" id="goButton" disabled onclick="redirectToSelection();">Go</button>
+        </div>
       </div>
     </div>
   </div>
-
-  <!-- Third Element -->
-  <div class="row">
-    <div class="col-lg-4 col-md-4 col-12">
-      <a href="/search/explore/<%= @master_id %>">
-        <button type="button" class="btn btn-primary w-100" style="max-width: 345px; margin-bottom: 10px;">See all pressings</button>
-      </a>
-    </div>
-  </div>
 </div>
-
-<div class="container-fluid">
-  <div class="col-md-2 col-xs-12">
-    <select class="form-control" name="year" id="year" onChange="changecont(this.value);" style="margin-bottom: 10px;">
-      <option value="" disabled selected>Select a year</option>
-      <% unique_years = [] %>
-      <% @drop_array.each do |a_year|%>
-      <% drop_year = a_year.split(" | ").first%>
-      <% unique_years << drop_year %>
-      <% end %>
-      <% unique_years.sort.uniq.each do |unique_year|%>
-      <option value="<%= unique_year %>"><%= unique_year %></option>
-      <% end %>
-    </select>
-    
-    <select class="form-control" name="country" id="country" onChange="changetext(this.value);" style="margin-bottom: 10px;">
-      <option value="" disabled selected>Select a country</option>
-    </select>
-    
-    <select class="form-control" name="text" id="text" onChange="checkSelection();" style="margin-bottom: 10px;">
-      <option value="" disabled selected>Select a version</option>
-    </select>
-    <button type="button" class="btn btn-success w-100" style="max-width: 345px;" id="goButton" disabled onclick="redirectToSelection();">Go</button>
-  </div>
-</div>
-
-
 
 <script>
-var yearsByCountry = {
-    <% unique_years.sort.uniq.each do |unique_year| %>
-    '<%= unique_year %>': [
-        'Select a country',
-        <% unique_year_countries = [] %>
-        <% @drop_array.each do |string| %>
-            <% year, country, _text, _record_id = string.split(" | ") %>
+  var yearsByCountry = {
+      <% unique_years.sort.uniq.each do |unique_year| %>
+      '<%= unique_year %>': [
+          'Select a country',
+          <% unique_year_countries = [] %>
+          <% @drop_array.each do |string| %>
+              <% year, country, _text, _record_id = string.split(" | ") %>
 
-            <% if year == unique_year %>
-            <% unique_year_countries << country  %>
-            <% end %>
-            <% end %>
-        <% unique_year_countries.sort.uniq.each do |a_country|%>
-        '<%= a_country%>',
-        <% end %>
-        ],
-    <% end%>
-};
+              <% if year == unique_year %>
+              <% unique_year_countries << country  %>
+              <% end %>
+              <% end %>
+          <% unique_year_countries.sort.uniq.each do |a_country|%>
+          '<%= a_country%>',
+          <% end %>
+          ],
+      <% end%>
+  };
 
-var textsByCountry = {
-  <% year_country_combs = [] %>
-  <% @drop_array.each do |comb| %>
-    <% year, country, _text, _record_id = comb.split(" | ") %>
-    <% year_country_combs << "#{year} | #{escape_javascript(country)}" %>
-  <% end %>
-
-  <% year_country_combs.sort.uniq.each do |year_country| %>
-    '<%= year_country %>': [ 
-    <% matching_version = []%>
-    <% year_country_split = year_country.split(" | ")%>
-    <% match_year = year_country_split[0] %>
-    <% match_country = year_country_split[1] %>
-    <% @drop_array.each do |string|%>
-    <% parts = string.split(" | ")%>
-    <% if parts[0] == match_year && parts[1] == match_country%>
-        <% matching_version << parts[2]%>
+  var textsByCountry = {
+    <% year_country_combs = [] %>
+    <% @drop_array.each do |comb| %>
+      <% year, country, _text, _record_id = comb.split(" | ") %>
+      <% year_country_combs << "#{year} | #{escape_javascript(country)}" %>
     <% end %>
+
+    <% year_country_combs.sort.uniq.each do |year_country| %>
+      '<%= year_country %>': [
+      <% matching_version = []%>
+      <% year_country_split = year_country.split(" | ")%>
+      <% match_year = year_country_split[0] %>
+      <% match_country = year_country_split[1] %>
+      <% @drop_array.each do |string|%>
+      <% parts = string.split(" | ")%>
+      <% if parts[0] == match_year && parts[1] == match_country%>
+          <% matching_version << parts[2]%>
+      <% end %>
+      <% end %>
+      <% matching_version.sort.each do |a_version|%>
+      '<%= a_version%>',
+      <% end %>
+      ],
     <% end %>
-    <% matching_version.sort.each do |a_version|%>
-    '<%= a_version%>',
-    <% end %>
-    ],
-  <% end %>
-};
+  };
 
-function changecont(value) {
-    if (value.length == 0) {
-        document.getElementById("country").innerHTML = "<option></option>";
-    } else {
-        var countryOptions = "";
-        for (var i = 0; i < yearsByCountry[value].length; i++) {
-            var countryName = yearsByCountry[value][i];
-            countryOptions += `<option value="${value} | ${countryName}">${countryName}</option>`;
-        }
-        document.getElementById("country").innerHTML = countryOptions;
-    }
-    document.getElementById("text").innerHTML = "<option value='' disabled selected>Select a version</option>";
-}
+  function changecont(value) {
+      if (value.length == 0) {
+          document.getElementById("country").innerHTML = "<option></option>";
+      } else {
+          var countryOptions = "";
+          for (var i = 0; i < yearsByCountry[value].length; i++) {
+              var countryName = yearsByCountry[value][i];
+              countryOptions += `<option value="${value} | ${countryName}">${countryName}</option>`;
+          }
+          document.getElementById("country").innerHTML = countryOptions;
+      }
+      document.getElementById("text").innerHTML = "<option value='' disabled selected>Select a version</option>";
+  }
 
-function changetext(value) {
-    if (value.length == 0) {
-        document.getElementById("text").innerHTML = "<option value='' disabled selected>Select a version</option>";
-    } else {
-        var textOptions = "";
-        for (textId in textsByCountry[value]) {
-            textOptions += "<option>" + textsByCountry[value][textId] + "</option>";
-        }
-        document.getElementById("text").innerHTML = textOptions;
-        checkSelection(); // Call the function here when the dropdown changes
-    }
-}
+  function changetext(value) {
+      if (value.length == 0) {
+          document.getElementById("text").innerHTML = "<option value='' disabled selected>Select a version</option>";
+      } else {
+          var textOptions = "";
+          for (textId in textsByCountry[value]) {
+              textOptions += "<option>" + textsByCountry[value][textId] + "</option>";
+          }
+          document.getElementById("text").innerHTML = textOptions;
+          checkSelection(); // Call the function here when the dropdown changes
+      }
+  }
 
-function checkSelection() {
-    var textSelect = document.getElementById("text");
-    var goButton = document.getElementById("goButton");
-    
-    if (textSelect.value) {
-        goButton.removeAttribute("disabled");
-    } else {
-        goButton.setAttribute("disabled", "disabled");
-    }
-}
+  function checkSelection() {
+      var textSelect = document.getElementById("text");
+      var goButton = document.getElementById("goButton");
 
-function redirectToSelection() {
-    var year = document.getElementById("year").value;
-    var country = document.getElementById("country").value;
-    var text = document.getElementById("text").value;
+      if (textSelect.value) {
+          goButton.removeAttribute("disabled");
+      } else {
+          goButton.setAttribute("disabled", "disabled");
+      }
+  }
 
-    if (year && country && text) {
-        // Concatenate the selections
-        var selections = country + " | " + text;
+  function redirectToSelection() {
+      var year = document.getElementById("year").value;
+      var country = document.getElementById("country").value;
+      var text = document.getElementById("text").value;
 
-        // Redirect to /findpressing with the concatenated selections
-        window.location.href = "/search/finding/" + selections;
-    }
-}
+      if (year && country && text) {
+          // Concatenate the selections
+          var selections = country + " | " + text;
 
+          // Redirect to /findpressing with the concatenated selections
+          window.location.href = "/search/finding/" + selections;
+      }
+  }
 </script>

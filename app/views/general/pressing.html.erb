@@ -22,80 +22,138 @@
   </div>
 </nav>
 
-<h1><strong><%= @artist %></strong> - <%= @record %></h1>
-
-<h1><%= @recordid %></h1>
-<div id="carousel-container" style="width: 300px; margin: 0; overflow: hidden; position: relative; left: 0;">
-  <button id="prevBtn" style="cursor: pointer; display: block; position: absolute; top: 50%; transform: translateY(-50%); padding: 10px; background-color: #007BFF; color: #fff; font-size: 16px; border: none; border-radius: 5px; left: 10px; z-index: 1;" onclick="prevSlide()"><</button>
-      <div class="carousel" style="display: flex;">
-        <% @image_link_array.each do |an_image|%>
-          <img class="carousel-image" src="<%= an_image %>" alt="Album image" style="height: 300px; width: 100%; object-fit: cover;">
-        <% end %>
-      </div>
-      <div id="counter" style="position: absolute; top: 10px; right: 10px; color: #fff; font-size: 16px;"></div>
-      <button id="nextBtn" style="cursor: pointer; display: block; position: absolute; top: 50%; transform: translateY(-50%); padding: 10px; background-color: #007BFF; color: #fff; font-size: 16px; border: none; border-radius: 5px; right: 10px;" onclick="nextSlide()">></button>
+<div class="container-fluid">
+  <!-- First Element -->
+  <div class="row">
+    <div class="col-12">
+      <h1 class="text-left"><strong><%= @artist %></strong> - <%= @record %></h1>
     </div>
-    <p>
-      <a href="/search/explore/<%= @master_id %>">
-        <Button>Explore all pressings</Button>
-      </a>
-    </p>
-    <p>
-      <a href="/search/findpressing/<%= @master_id %>">
-        <Button>Find a pressing</Button>
-      </a>
-    </p>
-    <p>New / Like new: 
-      <% if @new == "N/A" %>
-        <%= @new %>
-      <% else %>
-        $<%= sprintf("%.2f", @new).to_f %>
-      <% end %>
-    </p>
-    <p>Good / Excellent condition: 
-      <% if @used_excellent == "N/A" %>
-        <%= @used_excellent %>
-      <% else %>
-        $<%= sprintf("%.2f", @used_excellent).to_f %>
-      <% end %>
-    </p>
-    <p>Poor working condition: 
-      <% if @used_working == "N/A" %>
-        <%= @used_working %>
-      <% else %>
-        $<%= sprintf("%.2f", @used_working).to_f %>
-      <% end %>
-    </p>
-    <p>Catalogue number: <%= @catno %></p>
-    <p>Record label: <%= @label %></p>
-    <p>Pressing release year: <%= @press_year %></p>
-    <p>Pressing country: <%= @press_country %></p>
-    <p>Version: <%= @text %></p>
-    <p>Release type: <%= @release_type %></p>
-    <p>Genre: <%= @genre %></p>
-    <p>Buy on Discogs: <a href="<%= @discogs_buy_link %>" target="_blank">Go to Discogs</a></p>
-    <p>Buy on eBay: <a href="<%= @ebay_search_link %>" target="_blank">Go to eBay</a></p>
-    <%= @html_table.html_safe %>
+  </div>
+</div>
 
-    <script>
-      let currentIndex = 0;
-        const totalImages = document.querySelectorAll('.carousel-image').length;
-
-        function showSlide() {
-       const newTransformValue = -currentIndex * 100 + '%';
-       document.querySelector('.carousel').style.transform = 'translateX(' + newTransformValue + ')';
-       document.getElementById('counter').innerText = (currentIndex + 1) + ' / ' + totalImages;
-        }
-
-        function nextSlide() {
-       currentIndex = (currentIndex + 1) % totalImages;
-       showSlide();
-        }
-
-        function prevSlide() {
-       currentIndex = (currentIndex - 1 + totalImages) % totalImages;
-       showSlide();
-        }
-
-        document.addEventListener('DOMContentLoaded', showSlide);
-    </script>
+<div class="container-fluid">
+  <!-- 1st item: Carousel -->
+  <div class="row">
+    <div class="col-md-3 mb-2">
+      <div class="card border-0">
+        <div class="card-body p-0">
+          <div id="carouselExampleIndicators" class="carousel slide" data-bs-interval="false">
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+              <% @image_link_array.each_with_index do |an_image, index| %>
+                <% unless index.zero? %>
+                  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<%= index %>" aria-label="Slide <%= index+1 %>"></button>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="carousel-inner">
+              <% @image_link_array.each_with_index do |an_image, index| %>
+                <div class="carousel-item <%= index.zero? ? 'active' : '' %>">
+                  <img src="<%= an_image %>" class="d-block w-100" alt="Album cover">
+                </div>
+              <% end %>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+                   </div>
+            <a href="/search/explore/<%= @master_id %>">
+              <button type="button" class="btn btn-primary w-100" style="margin-top: 10px; margin-bottom: 10px;">See all pressings</button>
+            </a>
+            <a href="/search/findpressing/<%= @master_id %>">
+      <button type="button" class="btn btn-secondary w-100" style="margin-bottom: 10px;">Find a pressing</button>
+    </a>
+        </div>
+      </div>
+    </div>
+    <!-- 2nd item: pricing -->
+    <div class="col-md-3 mb-2">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">🔍 Details</h3>
+          <p class="card-text"><strong>📅 Year: </strong><%= @press_year %></p>
+          <p class="card-text"><strong>🌐 Country: </strong><% country_name = @press_country %>
+            <% country_words = country_name.split(' ') %>
+            <% country_words.each do |word| %>
+              <%= $country_flags[word] || '' %>
+            <% end %>
+            <%= @press_country %>
+          </p>
+          <p class="card-text"><strong>🏷️ Version: </strong><%= @format %> - <%= @release_type %> - <%= @text %></p>
+          <p class="card-text"><strong>🎹 Genre: </strong><%= @genre %></p>
+          <p class="card-text"><strong>🏢 Label: </strong><%= @label %></p>
+          <p class="card-text"><strong># Catalogue ID: </strong><%= @catno %></p>
+          <p class="card-text"><strong>📟 Barcode: </strong><%= @barcode %></p>
+        </div>
+      </div>
+    </div>
+    <!-- 3rd item: details -->
+    <div class="col-md-3 mb-2">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">💵  Pricing</h3>
+          <p class="card-text"><strong>✨ New / like new: </strong><% if @new == "N/A" %>
+              <%= @new %>
+            <% else %>
+              $<%= sprintf("%.2f", @new).to_f %>
+            <% end %>
+          </p>
+          <p class="card-text"><strong>👌 Used in good condition: </strong><% if @used_excellent == "N/A" %>
+              <%= @used_excellent %>
+            <% else %>
+              $<%= sprintf("%.2f", @used_excellent).to_f %>
+            <% end %>
+          </p>
+          <p class="card-text"><strong>🤕 Poor working condition: </strong><% if @used_working == "N/A" %>
+              <%= @used_working %>
+            <% else %>
+              $<%= sprintf("%.2f", @used_working).to_f %>
+            <% end %>
+          </p>
+          <a a href="<%= @discogs_buy_link %>" target="_blank">
+            <button type="button" class="btn w-100" style="margin-top: 10px; margin-bottom: 10px; background-color: rgba(49,49,48,255); color: white;">Buy on Discogs</button>
+          </a>
+          <a a href="<%= @ebay_search_link %>" target="_blank">
+            <button type="button" class="btn w-100" style="margin-top: 10px; margin-bottom: 10px; background-color: rgba(133,183,22,255); color: white;">Buy on eBay</button>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- 4th item: accordion -->
+    <div class="col-md-3 mb-2">
+      <div class="accordion" id="accordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              <strong>Discogs release notes</strong>
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion">
+            <div class="accordion-body">
+              <%= @notes %>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              <strong>Tracklist</strong>
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordion">
+            <div class="accordion-body">
+              <div class="table-responsive">
+                <%= @html_table.html_safe %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

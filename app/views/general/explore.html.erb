@@ -43,9 +43,7 @@
   </div>
 </div>
 
-<div class="container-fluid">
-
-  <% if $query_total_results > 100 %>
+<% if $query_total_results > 100 %>
   <div class="container-fluid">
     <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center col-md-12 col-xs-12" role="alert">
       <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
@@ -57,27 +55,23 @@
   </div>
 <% end %>
 
-  <!-- Second Element -->
+<div class="container-fluid">
   <div class="row">
-    <div class="col-lg-4 col-md-4 col-12">
-      <div class="py-2">
-        <img src="<%= @cover_url %>" alt="Album cover for <%= @record %> by <%= @artist %>" width=345>
+    <div class="col-md-3 mb-2">
+      <div class="card border-0">
+        <div class="card-body p-0">
+          <img src="<%= @cover_url %>" alt="Album cover for <%= @record %> by <%= @artist %>" style="width: 100%; margin-bottom: 10px;">
+          <a href="/search/findpressing/<%= @master_id %>">
+            <button type="button" class="btn btn-secondary w-100" style="margin-bottom: 10px; max-width: 479;">Find a pressing</button>
+          </a>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Third Element -->
-  <div class="row">
-    <div class="col-lg-4 col-md-4 col-12">
-      <a href="/search/findpressing/<%= @master_id %>">
-        <button type="button" class="btn btn-secondary w-100" style="max-width: 345px;">Find a pressing</button>
-      </a>
     </div>
   </div>
 </div>
 
 <div class="container-fluid">
-<hr>
+  <hr>
 </div>
 
 <div class="container-fluid">
