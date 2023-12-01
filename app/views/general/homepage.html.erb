@@ -4,7 +4,7 @@
   <nav class="nav justify-content-center justify-content-sm-start">
     <a class="nav-link" aria-current="page" href="#" style="color: black;">About</a>
     <div class="ms-2">
-      <a class="nav-link" aria-current="page" href="mailto:oquinter@chicagobooth.edu" style="color: black;">Contact</a>
+      <a class="nav-link" aria-current="page" href="mailto:oq@recky.io" style="color: black;">Contact</a>
     </div>
     <div class="ms-2">
       <!-- Link trigger modal -->
@@ -69,9 +69,9 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container-fluid">
   <div class="row justify-content-center align-items-center">
-    <ul class="nav nav-pills nav-justified col-md-6 col-12 py-1">
+    <ul class="nav nav-pills nav-justified col-md-4 col-12 py-1">
       <li class="nav-item role="presentation">
         <button class="nav-link active" id="pills-artist-tab" data-bs-toggle="pill" data-bs-target="#pills-artist" type="button" role="tab" aria-controls="pills-artist" aria-selected="false">Artist</button>
       </li>
@@ -88,37 +88,40 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container-fluid">
   <div class="row">
     <div class="d-flex justify-content-center align-items-center py-2">
       <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane show active" id="pills-artist" role="tabpanel" aria-labelledby="pills-artist-tab">
+
+        <div class="tab-pane show active col-12" id="pills-artist" role="tabpanel" aria-labelledby="pills-artist-tab">
           <form action="/search/artist" class="d-flex">
             <input class="form-control flex-grow-1" id="search_artist" type="text" name="searchartist" placeholder="E.g., <%= @placeholder_artist %>" required>
             <button class="btn btn-outline-secondary" type="submit">Search</button>
           </form>
         </div>
 
-        <div class="tab-pane" id="pills-album" role="tabpanel" aria-labelledby="pills-album-tab">
+        <div class="tab-pane col-12" id="pills-album" role="tabpanel" aria-labelledby="pills-album-tab">
           <form action="/search/name" class="d-flex">
             <input class="form-control flex-grow-1" id="search_name" type="text" name="searchtext" placeholder="E.g., <%= @placeholder_record %>" required>
             <button class="btn btn-outline-secondary" type="submit">Search</button>
           </form>
         </div>
 
-        <div class="tab-pane" id="pills-catno" role="tabpanel" aria-labelledby="pills-catno-tab">
+        <div class="tab-pane col-12" id="pills-catno" role="tabpanel" aria-labelledby="pills-catno-tab">
           <form action="/search/catno" class="d-flex">
             <input class="form-control flex-grow-1" id="search_catno" type="text" name="catno" placeholder="E.g., <%= @placeholder_catno %>" required>
             <button class="btn btn-outline-secondary" type="submit">Search</button>
           </form>
         </div>
 
-        <div class="tab-pane" id="pills-barcode" role="tabpanel" aria-labelledby="pills-barcode-tab">
+        <div class="tab-pane col-12" id="pills-barcode" role="tabpanel" aria-labelledby="pills-barcode-tab">
           <form action="/search/barcode" class="d-flex">
             <input class="form-control flex-grow-1" id="search_barcode" type="text" name="searchbarcode" placeholder="E.g., <%= @placeholder_barcode %>" required>
             <button class="btn btn-outline-secondary" type="submit">Search</button>
           </form>
         </div>
+
       </div>
     </div>
   </div>
+</div>
