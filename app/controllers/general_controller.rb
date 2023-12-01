@@ -1,7 +1,7 @@
 class GeneralController < ApplicationController
 
 def homepage
-  placeholders = ["Joy Division | Unknown Pleasures | FACT10 | 0825646183906", "Prince | Purple Rain | RCV1 547450 | 081227880385", "George Harrison | All Things Must Pass | 3565241 | 602435652412", "Madvillain | Madvillainy | STH2065 | 659457206512", "Mac DeMarco | Salad Days | CT-193 | 817949019471", "black midi | Schlagenheim | RT0073LP | 191402007312", "Weyes Blood | Titanic Rising | SP1232 | 098787123210", "Neutral Milk Hotel | In The Aeroplane Over The Sea | MRG136LP | 673855013619", "Kendrick Lamar | To Pimp a Butterfly | B0023464-01 | 602547311009", "Kero Kero Bonito | Bonito Generation | PRC-375 | 644110037510"]
+  placeholders = ["Joy Division | Unknown Pleasures | FACT10 | 0825646183906", "Prince And The Revolution | Purple Rain | RCV1 547450 | 081227880385", "George Harrison | All Things Must Pass | 3565241 | 602435652412", "Madvillain | Madvillainy | STH2065 | 659457206512", "Mac DeMarco | Salad Days | CT-193 | 817949019471", "black midi | Schlagenheim | RT0073LP | 191402007312", "Weyes Blood | Titanic Rising | SP1232 | 098787123210", "Neutral Milk Hotel | In The Aeroplane Over The Sea | MRG136LP | 673855013619", "Kendrick Lamar | To Pimp a Butterfly | B0023464-01 | 602547311009", "Kero Kero Bonito | Bonito Generation | PRC-375 | 644110037510"]
 
   placeholder_selection = placeholders[rand(0..9)]
   placeholder_items = placeholder_selection.split(" | ")
@@ -338,9 +338,9 @@ def findpressing
   @catno = $results_array.at(0).fetch("catno")
 
   #Finding first record that matches master and catno for basic album info
-  match_record = $results_array.find do |hash|
-    hash["master_id"] == @master_id
-  end 
+  match_record = $results_array.max_by do |hash|
+    hash["master_id"] == @master_id ? hash["community"]["have"] : -Float::INFINITY
+  end
   @cover_url = match_record.fetch("cover_image")
 
   #Breaking down artist name and record name
@@ -418,9 +418,9 @@ def explore
   @master_id = params.fetch("searchitem").to_i
 
   #Finding first record that matches master and catno for basic album info
-  match_record = $results_array.find do |hash|
-    hash["master_id"] == @master_id
-  end 
+  match_record = $results_array.max_by do |hash|
+    hash["master_id"] == @master_id ? hash["community"]["have"] : -Float::INFINITY
+  end
   @cover_url = match_record.fetch("cover_image")
 
   #Breaking down artist name and record name
@@ -440,20 +440,11 @@ end
 def multreleases
   @catno = params.fetch("searchitem")
 
-  first_masters = {}
-  @masters_list = $results_array.select do |hash|
-    master_id = hash["master_id"]
-    if master_id != 0 && !first_masters.key?(master_id)
-      first_masters[master_id] = true
-      true
-    else
-      false
-    end
-  end
+  @masters_list = $results_array.group_by { |hash| hash["master_id"] }.map do |_master_id, group|
+    group.max_by { |hash| hash["community"]["have"] } || group.first
+  end.compact.sort_by { |hash| -hash["community"]["have"] }
 
   master_counts = $results_array.group_by { |h| h["master_id"] }.transform_values(&:count)
-  @masters_list = @masters_list.sort_by { |h| -master_counts.fetch(h["master_id"], 0) }
-
 
   render(template: "general/multreleases")
 end 

@@ -68,9 +68,9 @@
         <% @masters_list.each do |a_master| %>
           <tr>
             <% if a_master.fetch("cover_image") == "https://st.discogs.com/bfb7c8c363a6739b62d80e79f603b2f433148612/images/spacer.gif"%>
-              <td class="d-none d-md-table-cell d-lg-table-cell"><img src="https://i.imgur.com/dccTEc1.png" alt="Album cover was not found>" height=150></td>
+              <td class="d-none d-md-table-cell d-lg-table-cell"><img src="https://i.imgur.com/dccTEc1.png" alt="Album cover was not found>" width=150></td>
             <% else %>
-            <td class="d-none d-md-table-cell d-lg-table-cell"><img src="<%= a_master.fetch("cover_image") %>" alt="Album cover>" height=150></td>
+            <td class="d-none d-md-table-cell d-lg-table-cell"><img src="<%= a_master.fetch("cover_image") %>" alt="Album cover>" width=150></td>
             <% end %>
             <td><%= a_master.fetch("title").split(" - ").at(0)%></td>
             <td><%= a_master.fetch("title").split(" - ").at(1)%></td>
