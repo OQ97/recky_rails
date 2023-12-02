@@ -119,9 +119,37 @@
             <input class="form-control flex-grow-1" id="search_barcode" type="text" name="searchbarcode" placeholder="E.g., <%= @placeholder_barcode %>" required>
             <button class="btn btn-outline-secondary" type="submit">Search</button>
           </form>
+          <div class="container-fluid text-center">
+            <button id="startScannerButton" class="btn btn-danger mt-3 mb-3">Open barcode scanner</button>
+            <div id="reader" width="250px"></div>
+            <div id="qr-reader-results"></div>
+          </div>
         </div>
-
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  function onScanSuccess(decodedText, decodedResult) {
+    // Redirect to the specified URL with the scanned code
+    window.location.href = `/search/barcode/${decodedText}`;
+  }
+
+  function onScanFailure(error) {
+    // Handle scan failure, for example, log the error
+    console.warn(`Code scan error = ${error}`);
+  }
+
+  // Initialize the scanner without starting it
+  let html5QrcodeScanner = new Html5QrcodeScanner(
+    "reader",
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    /* verbose= */ false
+  );
+
+  // Start the scanner when needed, for example, when a button is clicked
+  document.getElementById("startScannerButton").addEventListener("click", function () {
+    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+  });
+</script>

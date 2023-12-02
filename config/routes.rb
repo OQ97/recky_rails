@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   get("/search/finding/:user_selection", controller: "general", action: "finding")
   get("/search/explore/:searchitem", controller: "general", action: "explore")
   get("/about", controller: "general", action: "about")
+  get("sandbox", controller: "general", action: "sandbox")
+  get("sandbox/:code", controller: "general", action: "code")
 
   #Catno
   get("/search/catno", controller: "catno", action: "search")
@@ -29,5 +31,9 @@ Rails.application.routes.draw do
   get("/search/artist", controller:"artist", action: "search")
   get("/search/findartist/:artist_query", controller:"artist", action: "find")
   get("/search/artist/:artist_query", controller:"artist", action: "artist")
+
+  #Barcode
+  get("/search/barcode", controller:"barcode", action: "search")
+  get("/search/barcode/:searchbarcode", controller:"barcode", action: "search")
 
 end

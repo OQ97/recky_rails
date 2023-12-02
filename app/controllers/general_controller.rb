@@ -461,4 +461,14 @@ class GeneralController < ApplicationController
   def about
     render(template: "general/about")
   end
+
+  def sandbox
+    render(template: "general/sandbox")
+  end 
+
+  def code
+    @code = params.fetch("code")
+    render(template: "general/code")
+  end 
+
 end
