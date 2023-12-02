@@ -229,7 +229,7 @@ class GeneralController < ApplicationController
   def pressing
     #calling record id from URL
     @record_id = params.fetch("searchitem").to_i
-    @found_pressing = $results_array.find { |hash| hash["id"] == @record_id }
+    @found_pressing = session[:results_array].find { |hash| hash["id"] == @record_id }
 
     #finding other basic info about album
     @catno = @found_pressing.fetch("catno")
@@ -346,10 +346,10 @@ class GeneralController < ApplicationController
   def findpressing
     #Retrieving master and catno from URL
     @master_id = params.fetch("searchitem").to_i
-    @catno = $results_array.at(0).fetch("catno")
+    @catno = session[:results_array].at(0).fetch("catno")
 
     #Finding first record that matches master and catno for basic album info
-    match_record = $results_array.max_by do |hash|
+    match_record = session[:results_array].max_by do |hash|
       hash["master_id"] == @master_id ? hash["community"]["have"] : -Float::INFINITY
     end
     @cover_url = match_record.fetch("cover_image")
@@ -361,7 +361,7 @@ class GeneralController < ApplicationController
     @record = artist_record.at(1)
 
     #Getting options for dropdown menu
-    @matching_hashes = $results_array.select do |hash|
+    @matching_hashes = session[:results_array].select do |hash|
       hash["master_id"] == @master_id
     end
 
@@ -403,13 +403,13 @@ class GeneralController < ApplicationController
 
     #finding pressing id
     if text_selection == "Standard Edition"
-      @drop_selection = $results_array.find do |hash|
+      @drop_selection = session[:results_array].find do |hash|
         hash["year"] == year_selection &&
         hash["country"] == country_selection &&
         !hash["formats"].any? { |format| format.key?("text") }
       end
     else
-      @drop_selection = $results_array.find do |hash|
+      @drop_selection = session[:results_array].find do |hash|
         hash["year"] == year_selection &&
         hash["country"] == country_selection &&
         hash["formats"].any? { |format| format["text"] == text_selection }
@@ -427,7 +427,7 @@ class GeneralController < ApplicationController
     @master_id = params.fetch("searchitem").to_i
 
     #Finding first record that matches master and catno for basic album info
-    match_record = $results_array.max_by do |hash|
+    match_record = session[:results_array].max_by do |hash|
       hash["master_id"] == @master_id ? hash["community"]["have"] : -Float::INFINITY
     end
     @cover_url = match_record.fetch("cover_image")
@@ -439,7 +439,7 @@ class GeneralController < ApplicationController
     @record = artist_record.at(1)
 
     #Filtering results array for results that match master id and catno
-    @filtered_results = $results_array.select do |hash|
+    @filtered_results = session[:results_array].select do |hash|
       hash["master_id"] == @master_id
     end
 
@@ -449,11 +449,11 @@ class GeneralController < ApplicationController
   def multreleases
     @catno = params.fetch("searchitem")
 
-    @masters_list = $results_array.group_by { |hash| hash["master_id"] }.map do |_master_id, group|
+    @masters_list = session[:results_array].group_by { |hash| hash["master_id"] }.map do |_master_id, group|
       group.max_by { |hash| hash["community"]["have"] } || group.first
     end.compact.sort_by { |hash| -hash["community"]["have"] }
 
-    master_counts = $results_array.group_by { |h| h["master_id"] }.transform_values(&:count)
+    master_counts = session[:results_array].group_by { |h| h["master_id"] }.transform_values(&:count)
 
     render(template: "general/multreleases")
   end

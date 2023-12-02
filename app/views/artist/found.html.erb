@@ -38,12 +38,12 @@
   </symbol>
 </svg>
 
-<% if $query_total_results > 100 %>
+<% if session[:query_total_results] > 100 %>
   <div class="container-fluid">
     <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center col-md-12 col-xs-12" role="alert">
       <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
       <div>
-        <strong>Whoa!</strong> We found <strong><%= number_with_delimiter($query_total_results) %> records </strong> matching your query. Given technical constraints, we can only show you the first 100. If you can't find the record you are looking for, try searching by catalogue ID or barcode.
+        <strong>Whoa!</strong> We found <strong><%= number_with_delimiter(session[:query_total_results]) %> records </strong> matching your query. Given technical constraints, we can only show you the first 100. If you can't find the record you are looking for, try searching by catalogue ID or barcode.
       </div>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -86,7 +86,7 @@
             <td class="d-none d-md-table-cell d-lg-table-cell"><%= a_master.fetch("style").join(", ")%></td>
             <td class="d-none d-md-table-cell d-lg-table-cell"><%= a_master.fetch("label").uniq.sort.join(", ")%></td>
             <td>
-              <% master_count = $results_array.count { |hash| hash["master_id"] == a_master.fetch("master_id") } %>
+              <% master_count = session[:results_array].count { |hash| hash["master_id"] == a_master.fetch("master_id") } %>
               <% if master_count == 1 %>
                 <a href="/search/pressing/<%= a_master.fetch("id")%>"><Button type="button" class="btn btn-info text-white">See details</Button></a>
               <% else %>

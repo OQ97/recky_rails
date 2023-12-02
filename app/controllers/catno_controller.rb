@@ -19,14 +19,14 @@ def search
   raw_discogs_data = HTTP.get(@discogs_url)
   parsed_discogs_data = JSON.parse(raw_discogs_data)
   @unfiltered_results = parsed_discogs_data.fetch("results")
-  $query_total_results = parsed_discogs_data.fetch("pagination").fetch("items").to_i
+  session[:query_total_results] = parsed_discogs_data.fetch("pagination").fetch("items").to_i
   @unfiltered_results.each do |a_hash|
     a_hash["catno"] = a_hash["catno"].to_s
     a_hash["catno"].gsub!(/\s+/, '') 
     a_hash["catno"].upcase! if a_hash["catno"] 
     a_hash["master_id"] = a_hash["master_id"].to_i
   end
-  $results_array = @unfiltered_results.select do |a_hash|
+  session[:results_array] = @unfiltered_results.select do |a_hash|
     a_hash["master_id"] != 0  && a_hash.key?("year") && a_hash["catno"] == @catno
   end
   pagination_hash = parsed_discogs_data.fetch("pagination")
@@ -35,23 +35,23 @@ def search
   #render(template: "general/test")
 
   #Redirecting if search is not found 
-  if $results_array.empty?
+  if session[:results_array].empty?
     redirect_to "/notfound"
   else 
     #calculating number of pressings
-    @num_pressings = $results_array.count { |element| element.is_a?(Hash) }
+    @num_pressings = session[:results_array].count { |element| element.is_a?(Hash) }
 
     #determining whether there are multiple masters, pressings, or if it's a single pressing
     if @num_pressings > 1
       @master_ids = []
-      $results_array.each do |item|
+      session[:results_array].each do |item|
         master = item.fetch("master_id")
         @master_ids << master
       end
 
       #redirectioning based on wheter there are multiple masters
-      $num_masters = @master_ids.uniq.length
-      if $num_masters > 1
+      session[:num_masters] = @master_ids.uniq.length
+      if session[:num_masters] > 1
         redirect_to "/search/multreleases/#{@catno}"
       else
         @master_id = @master_ids.uniq.at(0) 
@@ -60,7 +60,7 @@ def search
 
     #redirectioning if there is only one release
     else
-      @record_id = $results_array.at(0).fetch("id")
+      @record_id = session[:results_array].at(0).fetch("id")
       redirect_to "/search/pressing/#{@record_id}"
     end 
   end 

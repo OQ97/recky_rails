@@ -6,17 +6,17 @@ class SearchController < ApplicationController
 
   def search_catalogue
     #Getting catalogue number
-    $catnum = params.fetch("catnum")
+    session[:catnum] = params.fetch("catnum")
 
     #Retreiving data from Discogs
     $discogs_key = ENV.fetch("DISCOGS_KEY")
     $discogs_secret = ENV.fetch("DISCOGS_SECRET")
     $discogs_token = ENV.fetch("DISCOGS_TOKEN")
-    @discogs_url = "https://api.discogs.com/database/search?type=release&format=vinyl&catno=#{$catnum}&key=#{$discogs_key}&secret=#{$discogs_secret}"
+    @discogs_url = "https://api.discogs.com/database/search?type=release&format=vinyl&catno=#{session[:catnum]}&key=#{$discogs_key}&secret=#{$discogs_secret}"
     raw_discogs_data = HTTP.get(@discogs_url)
     parsed_discogs_data = JSON.parse(raw_discogs_data)
-    $results_array = parsed_discogs_data.fetch("results")
-    first_result_hash = $results_array.at(0)
+    session[:results_array] = parsed_discogs_data.fetch("results")
+    first_result_hash = session[:results_array].at(0)
     pagination_hash = parsed_discogs_data.fetch("pagination")
 
     if first_result_hash.nil?
@@ -27,7 +27,7 @@ class SearchController < ApplicationController
       #determining whether there are multiple masters, pressings, or if it's a single pressing
       if @num_pressings > 1
          @master_ids = []
-         $results_array.each do |item|
+         session[:results_array].each do |item|
           master_id = item.fetch("master_id").to_i
           @master_ids << master_id
          end 

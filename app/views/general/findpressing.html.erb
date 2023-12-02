@@ -43,12 +43,12 @@
   </div>
 </div>
 
-<% if $query_total_results > 100 %>
+<% if session[:query_total_results] > 100 %>
   <div class="container-fluid">
     <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center col-md-12 col-xs-12" role="alert">
       <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
       <div>
-        <strong>Whoa!</strong> We found <strong><%= number_with_delimiter($query_total_results) %> records </strong> matching your query. Given technical constraints, we can only show you the first 100. If you can't find the record you are looking for, try searching by catalogue ID or barcode.
+        <strong>Whoa!</strong> We found <strong><%= number_with_delimiter(session[:query_total_results]) %> records </strong> matching your query. Given technical constraints, we can only show you the first 100. If you can't find the record you are looking for, try searching by catalogue ID or barcode.
       </div>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>

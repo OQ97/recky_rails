@@ -23,8 +23,8 @@
 </nav>
 
 <h1>We found multiple artists for your search</h1>
-<% if $query_total_results > 100 %>
-<p>Your query produced <%= number_with_delimiter($query_total_results) %> results. We can only show 100 of them given our server's capacity.</p>
+<% if session[:query_total_results] > 100 %>
+<p>Your query produced <%= number_with_delimiter(session[:query_total_results]) %> results. We can only show 100 of them given our server's capacity.</p>
 <p>If you can't find the record you are looking for, try searching by catalogue number or barcode.</p>
 <% end %>
 <table>

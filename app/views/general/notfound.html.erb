@@ -26,11 +26,11 @@
   <h1 class="text-left">We couldn't find an exact match for your search</h1>
 </div>
 
-<% if $query_total_results >0 %>
+<% if session[:query_total_results] >0 %>
   <div class="container-fluid">
     <h2 class="text-left">Did you mean:</h2>
   <ul class="list-group">
-    <% $results_array.each do |a_result|%>
+    <% session[:results_array].each do |a_result|%>
     <%if a_result.fetch("type") == "artist" %>
       <% redirect_notfound = a_result.fetch("title").gsub(" ", "+") %>
       <li class="list-group-item"><a href="/search/artist/<%= redirect_notfound %>" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"><%= a_result.fetch("title")%></a></li>
