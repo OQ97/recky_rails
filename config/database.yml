@@ -17,11 +17,12 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  database: recky
+  database: session_6m97
   pool: 5
-  username: reckyadmin
-  password: reckyadmin8734
-  host: localhost
+  username: session_6m97_user
+  password: xPghOcLzGUIQsH0W61RsmrRWdwiPiHPc
+  host: dpg-cllpmncjtl8s73epmidg-a
+  port: 5432
 
 development:
   adapter: sqlite3
