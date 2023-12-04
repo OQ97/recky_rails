@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   #General directories 
+  
   get("/", controller:"general", action: "homepage")
   get("/notfound", controller:"general", action: "notfound")
   get("/search/", controller: "catno", action: "search")
