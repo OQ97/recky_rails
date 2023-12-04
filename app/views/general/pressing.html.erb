@@ -88,6 +88,12 @@
           <p class="card-text"><strong>🏢 Label: </strong><%= @label %></p>
           <p class="card-text"><strong># Catalogue ID: </strong><%= @catno %></p>
           <p class="card-text"><strong>📟 Barcode: </strong><%= @barcode %></p>
+                    <%if @selected_album_id == "NO ALBUM" %>
+          <% else %>
+          <a a href="<%= @spotify_url %>" target="_blank">
+            <button type="button" class="btn w-100" style="margin-top: 10px; margin-bottom: 10px; background-color: rgba(4,221,97,255); color: black;">Listen on Spotify</button>
+          </a>
+          <% end %>
         </div>
       </div>
     </div>
@@ -114,12 +120,6 @@
               $<%= sprintf("%.2f", @used_working).to_f %>
             <% end %>
           </p>
-          <%if @selected_album_id == "NO ALBUM" %>
-          <% else %>
-          <a a href="<%= @spotify_url %>" target="_blank">
-            <button type="button" class="btn w-100" style="margin-top: 10px; margin-bottom: 10px; background-color: rgba(4,221,97,255); color: black;">Listen on Spotify</button>
-          </a>
-          <% end %>
           <a a href="<%= @discogs_buy_link %>" target="_blank">
             <button type="button" class="btn w-100" style="margin-top: 10px; margin-bottom: 10px; background-color: rgba(49,49,48,255); color: white;">Buy on Discogs</button>
           </a>
