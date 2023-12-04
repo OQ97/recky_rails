@@ -347,9 +347,9 @@ class GeneralController < ApplicationController
       @fair = @parsed_discogs_price_data.fetch("Fair (F)").fetch("value")
       @poor = @parsed_discogs_price_data.fetch("Poor (P)").fetch("value")
       #calculating new prices
-      @new = (@mint + @near_mint) / 2
-      @used_excellent = (@Very_good_plus + @Very_good) / 2
-      @used_working = (@good_plus + @good) / 2
+      @new = (@mint + @near_mint) / 2 - 6
+      @used_excellent = (@Very_good_plus + @Very_good) / 2 - 6
+      @used_working = (@good_plus + @good) / 2 - 6
     else
       #getting prices for different conditions
       @new = "N/A"
