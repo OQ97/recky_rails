@@ -317,6 +317,21 @@ class GeneralController < ApplicationController
     ebay_search_term_fixed = ebay_search_term.gsub(" ", "+")
     @ebay_search_link = "https://www.ebay.com/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw=#{ebay_search_term_fixed}&_sacat=0"
 
+    #Spotify
+    artist_lookup = @artist.sub(/\s*\(\d+\)/, "")
+    the_artist = RSpotify::Artist.search("#{artist_lookup}").first
+    albums = the_artist.albums
+
+    selected_album = albums.find { |album| album.name == @record }
+
+    if selected_album.nil?
+      @selected_album_id = "NO ALBUM"
+    else
+      @selected_album_id = selected_album.id
+    end
+
+    @spotify_url = "https://open.spotify.com/album/#{@selected_album_id}"
+
     #Retreiving price from API
     @prices_discogs_url = "https://api.discogs.com/marketplace/price_suggestions/#{@record_id}?&token=#{$discogs_token}"
     raw_discogs_price_data = HTTP.get(@prices_discogs_url)
@@ -464,11 +479,10 @@ class GeneralController < ApplicationController
 
   def sandbox
     render(template: "general/sandbox")
-  end 
+  end
 
   def code
     @code = params.fetch("code")
     render(template: "general/code")
-  end 
-
+  end
 end

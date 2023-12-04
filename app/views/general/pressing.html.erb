@@ -30,7 +30,6 @@
     </div>
   </div>
 </div>
-
 <div class="container-fluid">
   <!-- 1st item: Carousel -->
   <div class="row">
@@ -115,11 +114,17 @@
               $<%= sprintf("%.2f", @used_working).to_f %>
             <% end %>
           </p>
+          <%if @selected_album_id == "NO ALBUM" %>
+          <% else %>
+          <a a href="<%= @spotify_url %>" target="_blank">
+            <button type="button" class="btn w-100" style="margin-top: 10px; margin-bottom: 10px; background-color: rgba(4,221,97,255); color: black;">Listen on Spotify</button>
+          </a>
+          <% end %>
           <a a href="<%= @discogs_buy_link %>" target="_blank">
             <button type="button" class="btn w-100" style="margin-top: 10px; margin-bottom: 10px; background-color: rgba(49,49,48,255); color: white;">Buy on Discogs</button>
           </a>
           <a a href="<%= @ebay_search_link %>" target="_blank">
-            <button type="button" class="btn w-100" style="margin-top: 10px; margin-bottom: 10px; background-color: rgba(133,183,22,255); color: white;">Buy on eBay</button>
+            <button type="button" class="btn w-100" style="margin-top: 10px; margin-bottom: 10px; background-color: rgba(247,186,0,255); color: black;">Buy on eBay</button>
           </a>
         </div>
       </div>
