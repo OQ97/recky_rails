@@ -349,7 +349,7 @@ class GeneralController < ApplicationController
       #calculating new prices
       @new = (@mint + @near_mint) / 2 - 6
       @used_excellent = (@Very_good_plus + @Very_good) / 2 - 6
-      @used_working = (@good_plus + @good) / 2 - 6
+      @used_working = (@good_plus + @good) / 2
     else
       #getting prices for different conditions
       @new = "N/A"
