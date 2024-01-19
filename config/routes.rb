@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get("sandbox", controller: "general", action: "sandbox")
   get("sandbox/:code", controller: "general", action: "code")
 
+  get("/error", controller: "errors", action:"error")
+
   #Catno
   get("/search/catno", controller: "catno", action: "search")
   get("/search/catno/:artist_search", controller: "catno", action: "search")

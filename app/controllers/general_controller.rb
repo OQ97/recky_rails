@@ -313,6 +313,7 @@ class GeneralController < ApplicationController
 
     #External links:
     @discogs_buy_link = "https://www.discogs.com/sell/release/#{@record_id}?ev=rb"
+    @discogs_terms_link = "https://www.discogs.com/release/#{@record_id}?ev=rb"
     ebay_search_term = @artist.to_s + " " + @record.to_s + " " + @catno.to_s + " " + @press_year.to_s + " " + " Vinyl"
     ebay_search_term_fixed = ebay_search_term.gsub(" ", "+")
     @ebay_search_link = "https://www.ebay.com/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw=#{ebay_search_term_fixed}&_sacat=0"
@@ -401,7 +402,7 @@ class GeneralController < ApplicationController
       "#{hash["year"]} | #{hash["country"]} | #{hash["text"]} | #{hash["record_id"]}"
     end
 
-    @drop_array = @drop_array.map { |str| str.gsub("&", " + ") }
+    @drop_array = @drop_array.map { |str| str.gsub("&", "+") }
 
     @drop_years = @drop_hash.map { |hash| hash["year"] }
 
@@ -410,29 +411,33 @@ class GeneralController < ApplicationController
 
   def finding
     #getting each user selection from URL
-    user_selection = params.fetch("user_selection")
-    split_selection = user_selection.split(" | ")
-    year_selection = split_selection[0]
-    country_selection = split_selection[1]
-    text_selection = split_selection[2]
+    @prelem_selection = params.fetch("user_selection")
+    @user_selection = @prelem_selection.gsub("+", "&")
+    split_selection = @user_selection.split(" | ")
+    @year_selection = split_selection[0]
+    @country_selection = split_selection[1]
+    @text_selection = split_selection[2]
 
     #finding pressing id
-    if text_selection == "Standard Edition"
+    if @text_selection == "Standard Edition"
       @drop_selection = session[:results_array].find do |hash|
-        hash["year"] == year_selection &&
-        hash["country"] == country_selection &&
+        hash["year"] == @year_selection &&
+        hash["country"] == @country_selection &&
         !hash["formats"].any? { |format| format.key?("text") }
       end
     else
       @drop_selection = session[:results_array].find do |hash|
-        hash["year"] == year_selection &&
-        hash["country"] == country_selection &&
-        hash["formats"].any? { |format| format["text"] == text_selection }
+        @texts = hash["formats"].map { |format| format["text"].to_s.strip if format["text"] }
+        @texts_str = @texts.compact.join(", ")
+        hash["year"] == @year_selection &&
+        hash["country"] == @country_selection &&
+        @texts_str.strip == @text_selection.strip
       end
     end
 
     @selected_id = @drop_selection.fetch("id")
 
+    #render(template: "general/sandbox")
     #redirecting to results page
     redirect_to "/search/catno/pressing/#{@selected_id}"
   end

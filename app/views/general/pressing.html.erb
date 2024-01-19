@@ -22,6 +22,8 @@
   </div>
 </nav>
 
+<%= @parsed_apple_data %>
+
 <div class="container-fluid">
   <!-- First Element -->
   <div class="row">
@@ -60,13 +62,13 @@
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Next</span>
             </button>
-                   </div>
-            <a href="/search/explore/<%= @master_id %>">
-              <button type="button" class="btn btn-primary w-100" style="margin-top: 10px; margin-bottom: 10px;">See all pressings</button>
-            </a>
-            <a href="/search/findpressing/<%= @master_id %>">
-      <button type="button" class="btn btn-secondary w-100" style="margin-bottom: 10px;">Find a pressing</button>
-    </a>
+          </div>
+          <a href="/search/explore/<%= @master_id %>">
+            <button type="button" class="btn btn-primary w-100" style="margin-top: 10px; margin-bottom: 10px;">See all pressings</button>
+          </a>
+          <a href="/search/findpressing/<%= @master_id %>">
+            <button type="button" class="btn btn-secondary w-100" style="margin-bottom: 10px;">Find a pressing</button>
+          </a>
         </div>
       </div>
     </div>
@@ -88,11 +90,11 @@
           <p class="card-text"><strong>🏢 Label: </strong><%= @label %></p>
           <p class="card-text"><strong># Catalogue ID: </strong><%= @catno %></p>
           <p class="card-text"><strong>📟 Barcode: </strong><%= @barcode %></p>
-                    <%if @selected_album_id == "NO ALBUM" %>
+          <%if @selected_album_id == "NO ALBUM" %>
           <% else %>
-          <a a href="<%= @spotify_url %>" target="_blank">
-            <button type="button" class="btn w-100" style="margin-top: 10px; margin-bottom: 10px; background-color: rgba(4,221,97,255); color: black;">Listen on Spotify</button>
-          </a>
+            <a a href="<%= @spotify_url %>" target="_blank">
+              <button type="button" class="btn w-100" style="margin-top: 10px; margin-bottom: 10px; background-color: rgba(4,221,97,255); color: black;">Listen on Spotify</button>
+            </a>
           <% end %>
         </div>
       </div>
@@ -161,4 +163,8 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="container-fluid">
+  <a href="<%= @discogs_terms_link %>" target="_blank" class="text-black extra-small-font">Data provided by Discogs</a>
 </div>

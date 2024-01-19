@@ -44,6 +44,8 @@ gem "bootsnap", require: false
 
 #gem 'activerecord-session_store'
 gem 'activerecord-session_store'
+
+#gem spotify
 gem 'rspotify'
 
 # Use Sass to process CSS
