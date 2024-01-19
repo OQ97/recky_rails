@@ -69,6 +69,7 @@
           <a href="/search/findpressing/<%= @master_id %>">
             <button type="button" class="btn btn-secondary w-100" style="margin-bottom: 10px;">Find a pressing</button>
           </a>
+          <button type="button" class="btn btn-danger w-100" style="margin-bottom: 10px; background-color: rgba(192,0,0,255);" onclick="copyToClipboard('recky.io/search/pressing/<%= @record_id %>')">Share Recky URL</button>
         </div>
       </div>
     </div>
@@ -168,3 +169,15 @@
 <div class="container-fluid">
   <a href="<%= @discogs_terms_link %>" target="_blank" class="text-black extra-small-font">Data provided by Discogs</a>
 </div>
+
+<script>
+  function copyToClipboard(text) {
+    var textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    alert('URL copied to clipboard');
+  }
+</script>

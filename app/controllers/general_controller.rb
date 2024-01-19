@@ -227,9 +227,25 @@ class GeneralController < ApplicationController
   end
 
   def pressing
+
     #calling record id from URL
     @record_id = params.fetch("searchitem").to_i
-    @found_pressing = session[:results_array].find { |hash| hash["id"] == @record_id }
+   
+    if session[:results_array].find { |hash| hash["id"] == @record_id }.nil?
+      $discogs_key = ENV.fetch("DISCOGS_KEY")
+      $discogs_secret = ENV.fetch("DISCOGS_SECRET")
+      $discogs_token = ENV.fetch("DISCOGS_TOKEN")
+      @discogs_url = "https://api.discogs.com/database/search?type=release&query=r#{@record_id}&key=#{$discogs_key}&secret=#{$discogs_secret}&per_page=100"
+      raw_discogs_data = HTTP.get(@discogs_url)
+      parsed_discogs_data = JSON.parse(raw_discogs_data)
+      @unfiltered_results = parsed_discogs_data.fetch("results")
+      session[:query_total_results] = parsed_discogs_data.fetch("pagination").fetch("items").to_i
+      session[:results_array] = @unfiltered_results
+      @real_count = session[:results_array].count { |hash| hash["title"].casecmp("#{@text}").zero? }
+      @found_pressing = session[:results_array].find { |hash| hash["id"] == @record_id }
+    else
+      @found_pressing = session[:results_array].find { |hash| hash["id"] == @record_id }
+    end
 
     #finding other basic info about album
     @catno = @found_pressing.fetch("catno")
