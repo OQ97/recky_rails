@@ -228,10 +228,12 @@ class GeneralController < ApplicationController
 
   def pressing
 
-    #calling record id from URL
+    # calling record id from URL
     @record_id = params.fetch("searchitem").to_i
-   
-    if session[:results_array].find { |hash| hash["id"] == @record_id }.nil?
+
+    if session[:results_array]&.find { |hash| hash["id"] == @record_id }
+      @found_pressing = session[:results_array].find { |hash| hash["id"] == @record_id }
+    else
       $discogs_key = ENV.fetch("DISCOGS_KEY")
       $discogs_secret = ENV.fetch("DISCOGS_SECRET")
       $discogs_token = ENV.fetch("DISCOGS_TOKEN")
@@ -242,9 +244,7 @@ class GeneralController < ApplicationController
       session[:query_total_results] = parsed_discogs_data.fetch("pagination").fetch("items").to_i
       session[:results_array] = @unfiltered_results
       @real_count = session[:results_array].count { |hash| hash["title"].casecmp("#{@text}").zero? }
-      @found_pressing = session[:results_array].find { |hash| hash["id"] == @record_id }
-    else
-      @found_pressing = session[:results_array].find { |hash| hash["id"] == @record_id }
+      @found_pressing = session[:results_array]&.find { |hash| hash["id"] == @record_id }
     end
 
     #finding other basic info about album
