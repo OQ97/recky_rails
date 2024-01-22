@@ -178,7 +178,6 @@ class GeneralController < ApplicationController
       "Africa" => "🇿🇦",
       "South Korea" => "🇰🇷",
       "Korea" => "🇰🇷",
-      "Sudan" => "🇸🇸",
       "Spain" => "🇪🇸",
       "Sri" => "🇱🇰",
       "Sudan" => "🇸🇩",
