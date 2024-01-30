@@ -1,7 +1,7 @@
 class ArtistController < ApplicationController
   def search
     #Getting search text
-    @text = params.fetch("searchartist")
+    @text = params.fetch("searchartist").chomp
     @redirect_text = @text.gsub(" ", "+")
 
     #Retreiving data from Discogs
@@ -15,23 +15,23 @@ class ArtistController < ApplicationController
     session[:query_total_results] = parsed_discogs_data.fetch("pagination").fetch("items").to_i
     session[:results_array] = @unfiltered_results
 
-    @real_count = session[:results_array].count { |hash| hash["title"].casecmp("#{@text}").zero? }
+    @real_count = session[:results_array].count { |hash| hash["title"].strip.casecmp(@text.strip).zero? }
 
     #render(template: "general/test")
 
     if @real_count == 0
       redirect_to "/notfound"
     elsif @real_count == 1
-      redirect_to "/search/artist/#{@redirect_text}"
+     redirect_to "/search/artist/#{@redirect_text}"
     elsif @real_count > 1
-      redirect_to "/search/findartist/#{@redirect_text}"
+    redirect_to "/search/findartist/#{@redirect_text}"
     else
-      redirect_to "/notfound"
+     redirect_to "/notfound"
     end
   end
 
   def find
-    @artist_query = params.fetch("artist_query")
+    @artist_query = params.fetch("artist_query").chomp
     @artist_query = @artist_query.gsub("+", " ")
 
     @artist_array = session[:results_array].select { |hash| hash["title"].casecmp("#{@artist_query}").zero? }
@@ -40,7 +40,7 @@ class ArtistController < ApplicationController
   end
 
   def artist
-    @artist_query = params.fetch("artist_query")
+    @artist_query = params.fetch("artist_query").chomp
     @artist_query = @artist_query.gsub("+", " ")
 
     $discogs_key = ENV.fetch("DISCOGS_KEY")
